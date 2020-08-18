@@ -17,7 +17,7 @@ void setup() {
   // Configurar sensor de distancia
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  
+
   // Configurar sensor de peso
   //  balanza.begin(DOUT, CLK);
   //  Serial.print("Lectura del valor del ADC:t");
@@ -27,7 +27,7 @@ void setup() {
   //  balanza.set_scale(); //La escala por defecto es 1
   //  balanza.tare(20);  //El peso actual es considerado Tara.
   //  Serial.println("Coloque un peso conocido:");
-  
+
   // Configurar data rate en baud (bits por segundo)
   Serial.begin(9600);
 }
@@ -39,16 +39,16 @@ void loop() {
   // Limpiar trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
+  // Enviar HIGH a trigPin durante 10 microsegundos
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
+  // Leer echoPin, devuelve el tiempo que tomo la onda de sonida regresar en microsegundos
   int duration = pulseIn(echoPin, HIGH);
-  // Calculating the distance
+  // Calcular la distancia
   int waterDistance = duration * 0.034 / 2;
-  // Prints the distance on the Serial Monitor
-  Serial.println(waterDistance);
+  // Imprimir valor en consola
+  // Serial.println(waterDistance);
 
   //------------------------------------------------------
   // Obtener peso de balanza
@@ -63,11 +63,15 @@ void loop() {
   //------------------------------------------------------
   // 1. Si el switch está HIGH, la puerta está cerrada
   if (digitalRead(magneticPin) == HIGH) {
-    // 2. Si hay peso
-     Serial.println("Cerrada");
-  } else {
-     Serial.println("Abierto");
+    Serial.println("Cerrada");
+    // 2. Si hay peso, hay paquete
+    if (peso > 0) {
+
+    }
   }
+  //  else {
+  //     Serial.println("Abierto");
+  //  }
 
   delay(500);
 }
