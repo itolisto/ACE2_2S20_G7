@@ -1,13 +1,15 @@
 #include <HX711.h>
 
-const int dataPin = A1;
-const int CLK = A0;
-double peso;
+const int magneticPin = 2;
 
 const int trigPin = 4;
 const int echoPin = 5;
 
-const int magneticPin = 2;
+const int waterPumPin = 7;
+
+const int dataPin = A1;
+const int CLK = A0;
+double peso;
 
 HX711 balanza;
 
@@ -17,6 +19,8 @@ void setup() {
   // Configurar sensor de distancia
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  // Configurar switch de bomba de agua
+  pinMode(waterPumPin, OUTPUT);
 
   // Configurar sensor de peso
   //  balanza.begin(DOUT, CLK);
@@ -66,7 +70,29 @@ void loop() {
     Serial.println("Cerrada");
     // 2. Si hay peso, hay paquete
     if (peso > 0) {
-
+      // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
+      if (waterDistance < 10) {
+        // Alto
+        digitalWrite(waterPumPin, HIGH);
+        // Esperar y rociar por 1 segundo, luego apagar la bomba
+        delay(10000);
+        digitalWrite(waterPumPin, LOW);
+      } else if (waterDistance >= 10 && waterDistance < 20) {
+        // Media
+        digitalWrite(waterPumPin, HIGH);
+        // Esperar y rociar por 1 segundo, luego apagar la bomba
+        delay(10000);
+        digitalWrite(waterPumPin, LOW);
+      } else if (waterDistance >= 30 && waterDistance < 30) {
+        // Bajo
+        digitalWrite(waterPumPin, HIGH);
+        // Esperar y rociar por 1 segundo, luego apagar la bomba
+        delay(10000);
+        digitalWrite(waterPumPin, LOW);
+      } else {
+        // No hay liquido, no hacer nada
+        digitalWrite(waterPumPin, LOW);
+      }
     }
   }
   //  else {
