@@ -66,7 +66,7 @@ void loop() {
   if (digitalRead(magneticPin) == HIGH) {
     Serial.println("Cerrada");
     // 2. Si hay peso, hay paquete
-    if (peso > 0) {
+    if (peso > 20) {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
       if (waterDistance < 10) {
         // Serial.println("Alto");
@@ -106,11 +106,11 @@ void Calibrar(void)
 
   Serial.println("5 segundos para colocar peso");
   delay(5000);
-  Serial.println("Ya deberia estar colocado -.-");
 
   for (int i = 0; i < 3; i++) {
+    Serial.println("Midiendo");
     medicion = medicion + balanza.get_value(20); // 20 mediciones
-    delay(100);
+    delay(1000);
   }
 
   Serial.println("Retirar peso");
@@ -123,4 +123,5 @@ void Calibrar(void)
 
   escala = (medicion / 3) / Peso_conocido;
   balanza.set_scale(escala);
+  delay(500);
 }
