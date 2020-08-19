@@ -7,13 +7,15 @@ const int echoPin = 5;
 
 const int waterPumPin = 7;
 
-const int dataPin = A1;
+const int DOUT = A1;
 const int CLK = A0;
-double peso;
+const int Peso_conocido = 401; //401 gramos
 
 HX711 balanza;
 
 void setup() {
+  // Configurar data rate en baud (bits por segundo)
+  Serial.begin(9600);
   // Configurar switch magnético
   pinMode(magneticPin, INPUT);
   // Configurar sensor de distancia
@@ -21,19 +23,10 @@ void setup() {
   pinMode(echoPin, INPUT);
   // Configurar switch de bomba de agua
   pinMode(waterPumPin, OUTPUT);
-
   // Configurar sensor de peso
-  //  balanza.begin(DOUT, CLK);
-  //  Serial.print("Lectura del valor del ADC:t");
-  //  Serial.println(balanza.read());
-  //  Serial.println("No ponga ningún objeto sobre la balanza");
-  //  Serial.println("Destarando...");
-  //  balanza.set_scale(); //La escala por defecto es 1
-  //  balanza.tare(20);  //El peso actual es considerado Tara.
-  //  Serial.println("Coloque un peso conocido:");
-
-  // Configurar data rate en baud (bits por segundo)
-  Serial.begin(9600);
+  Serial.println("Configurando balanza");
+  balanza.begin(DOUT, CLK);
+  Calibrar();
 }
 
 void loop() {
@@ -57,10 +50,15 @@ void loop() {
   //------------------------------------------------------
   // Obtener peso de balanza
   //------------------------------------------------------
-  int peso = 0;
-  //  Serial.print("Valor de lectura: t");
-  //  Serial.println(balanza.get_value(10),0);
-  //  delay(100);
+  float peso = balanza.get_units(10);
+
+  if (peso < 0) {
+    peso = peso * -1;
+  }
+
+  Serial.print("Valor de lectura: ");
+  Serial.println(peso, 1);
+  delay(100);
 
   //------------------------------------------------------
   // Acciones
@@ -73,23 +71,27 @@ void loop() {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
       if (waterDistance < 10) {
         // Alto
+        Serial.println("Alto");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(10000);
+        delay(500);
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 10 && waterDistance < 20) {
+        Serial.println("Medio");
         // Media
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(10000);
+        delay(500);
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 30 && waterDistance < 30) {
+        Serial.println("Bajo");
         // Bajo
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(10000);
+        delay(500);
         digitalWrite(waterPumPin, LOW);
       } else {
+        Serial.println("No hay");
         // No hay liquido, no hacer nada
         digitalWrite(waterPumPin, LOW);
       }
@@ -100,4 +102,32 @@ void loop() {
   //  }
 
   delay(500);
+}
+
+void Calibrar(void)
+{
+  float escala;
+  float medicion = 0;
+  balanza.set_scale(); // La escala por defecto es 1
+  balanza.tare(20);  //20 mediciones
+
+  Serial.println("5 segundos para colocar peso");
+  delay(5000);
+  Serial.println("Ya deberia estar colocado -.-");
+
+  for (int i = 0; i < 3; i++) {
+    medicion = medicion + balanza.get_value(20); // 20 mediciones
+    delay(100);
+  }
+
+  Serial.println("Retirar peso");
+  
+  for (int i = 0; i < 3; i++) {
+    delay(1000);
+  }
+
+  Serial.println("Ya deberia estar retirado");
+
+  escala = (medicion / 3) / Peso_conocido;
+  balanza.set_scale(escala);
 }
