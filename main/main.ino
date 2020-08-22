@@ -64,34 +64,36 @@ void loop() {
   //------------------------------------------------------
   // 1. Si el switch está HIGH, la puerta está cerrada
   if (digitalRead(magneticPin) == HIGH) {
-    Serial.println("Cerrada");
+    Serial.println("Cerrado buzon");
     // 2. Si hay peso, hay paquete
     if (peso > 20) {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
       if (waterDistance < 10) {
-        // Serial.println("Alto");
+         Serial.println("Alto");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 10 && waterDistance < 20) {
-        // Serial.println("Medio");
+         Serial.println("Medio");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 30 && waterDistance < 30) {
-        // Serial.println("Bajo");
+         Serial.println("Bajo");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else {
-        // Serial.println("No hay");
+         Serial.println("No hay");
         // No hay liquido, no hacer nada
         digitalWrite(waterPumPin, LOW);
       }
     }
+  } else {
+    Serial.println("Abierto buzon");
   }
 
   delay(500);
