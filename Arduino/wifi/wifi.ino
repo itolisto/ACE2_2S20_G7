@@ -10,6 +10,7 @@ void setup() {
   Serial.begin(115200);
   // Configurar la informacion para conexion WiFi
   WiFi.begin(ssid, password);
+  Serial.println("Connection begin");
 
   while (WiFi.status() != WL_CONNECTED) { // Esperar a la conexion WiFi
     delay(500);
