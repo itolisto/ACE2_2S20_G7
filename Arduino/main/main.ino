@@ -15,7 +15,7 @@ HX711 balanza;
 
 void setup() {
   // Configurar data rate en baud (bits por segundo)
-  Serial.begin(9600);
+  Serial.begin(115200);
   // Configurar switch magnético
   pinMode(magneticPin, INPUT);
   // Configurar sensor de distancia
