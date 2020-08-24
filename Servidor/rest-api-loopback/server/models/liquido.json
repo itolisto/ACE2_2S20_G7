@@ -1,0 +1,36 @@
+{
+    "name": "liquido",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "nivel": {
+            "type": "string",
+            "required": true,
+            "default": 0
+          },
+          "timestamp": {
+            "type": "date",
+            "required": true,
+            "defaultFn": "now"
+          },
+          "latitude": {
+            "type": "number",
+            "required": false,
+            "default": 0
+          },
+          "longitude": {
+            "type": "number",
+            "required": false,
+            "default": 0
+          }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+
+
+}

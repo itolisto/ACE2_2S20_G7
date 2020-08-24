@@ -1,0 +1,38 @@
+{
+  "name": "bitacora",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "existe": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "peso": {
+      "type": "number",
+      "required": false,
+      "default": 0
+    },"timestamp": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    },
+    "latitude": {
+      "type": "number",
+      "required": false,
+      "default": 0
+    },
+    "longitude": {
+      "type": "number",
+      "required": false,
+      "default": 0
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
