@@ -24,7 +24,6 @@ void setup() {
   // Configurar switch de bomba de agua
   pinMode(waterPumPin, OUTPUT);
   // Configurar sensor de peso
-  Serial.println("Configurando balanza");
   balanza.begin(DOUT, CLK);
   Calibrar();
 }
@@ -63,7 +62,6 @@ void loop() {
   if (digitalRead(magneticPin) == HIGH) {
     // Imprimir valor en consola
     // Serial.println(peso, 1);
-    // Serial.println("Cerrado buzon");
     // 2. Si hay peso, hay paquete
     if (peso > 20) {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
@@ -71,8 +69,6 @@ void loop() {
         String chain = "#1#" + String(peso, 1) + String("#alto");
         char* CharString;
         chain.toCharArray(CharString, chain.length());
-
-        Serial.println(CharString);
         Serial.write(CharString);
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
@@ -82,8 +78,6 @@ void loop() {
         String chain = "#1#" + String(peso, 1) + String("#medio");
         char* CharString;
         chain.toCharArray(CharString, chain.length());
-
-        Serial.println(CharString);
         Serial.write(CharString);
         Serial.write("#1#56.7#medio");
         digitalWrite(waterPumPin, HIGH);
@@ -94,8 +88,6 @@ void loop() {
         String chain = "#1#" + String(peso, 1) + String("#bajo");
         char* CharString;
         chain.toCharArray(CharString, chain.length());
-
-        Serial.println(CharString);
         Serial.write(CharString);
         Serial.write("#1#56.7#bajo");
         digitalWrite(waterPumPin, HIGH);
@@ -103,7 +95,6 @@ void loop() {
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else {
-        // Serial.println("No hay");
         // No hay liquido, no hacer nada
         digitalWrite(waterPumPin, LOW);
       }

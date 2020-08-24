@@ -95,7 +95,7 @@ void enviar(int hayObjeto, float peso, String liquido) {
 
 
   StaticJsonDocument<50> JSONbuffer2;
-  JSONbuffer2["nivel"] = liquido;
+  JSONbuffer2["liquido"] = liquido;
   char JSONmessageBuffer2[50];
   serializeJson(JSONbuffer2, JSONmessageBuffer2, 50);
 
