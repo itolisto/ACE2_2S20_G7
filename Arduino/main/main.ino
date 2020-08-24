@@ -64,38 +64,27 @@ void loop() {
     // Serial.println(peso, 1);
     // 2. Si hay peso, hay paquete
     if (peso > 20) {
-      // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
+      String chain = "";
+      // 3. Rociar
       if (waterDistance < 4) {
-        String chain = "#1#" + String(peso, 1) + String("#alto");
-        char* CharString;
-        chain.toCharArray(CharString, chain.length());
-        Serial.write(CharString);
-        digitalWrite(waterPumPin, HIGH);
-        // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(500);
-        digitalWrite(waterPumPin, LOW);
+        chain = "#1#" + String(peso, 1) + String("#alto");
       } else if (waterDistance >= 4 && waterDistance < 7) {
-        String chain = "#1#" + String(peso, 1) + String("#medio");
-        char* CharString;
-        chain.toCharArray(CharString, chain.length());
-        Serial.write(CharString);
-        Serial.write("#1#56.7#medio");
-        digitalWrite(waterPumPin, HIGH);
-        // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(500);
-        digitalWrite(waterPumPin, LOW);
+        chain = "#1#" + String(peso, 1) + String("#medio");
       } else if (waterDistance >= 7 && waterDistance < 11) {
-        String chain = "#1#" + String(peso, 1) + String("#bajo");
-        char* CharString;
-        chain.toCharArray(CharString, chain.length());
-        Serial.write(CharString);
-        Serial.write("#1#56.7#bajo");
-        digitalWrite(waterPumPin, HIGH);
-        // Esperar y rociar por 1 segundo, luego apagar la bomba
-        delay(500);
-        digitalWrite(waterPumPin, LOW);
+        chain = "#1#" + String(peso, 1) + String("#bajo");
       } else {
         // No hay liquido, no hacer nada
+      }
+
+      int str_len = chain.length() + 1;
+      
+      if (str_len > 1) {
+        char CharString[str_len];
+        chain.toCharArray(CharString, str_len);
+        Serial.write(CharString);
+        digitalWrite(waterPumPin, HIGH);
+        // Esperar y rociar por 1 segundo, luego apagar la bomba
+        delay(1000);
         digitalWrite(waterPumPin, LOW);
       }
     } else {
