@@ -67,11 +67,11 @@ void loop() {
       String chain = "";
       // 3. Rociar
       if (waterDistance < 4) {
-        chain = "#1#" + String(peso, 1) + String("#alto");
+        chain = "#1#" + String(peso, 1) + String("#alto#");
       } else if (waterDistance >= 4 && waterDistance < 7) {
-        chain = "#1#" + String(peso, 1) + String("#medio");
+        chain = "#1#" + String(peso, 1) + String("#medio#");
       } else if (waterDistance >= 7 && waterDistance < 11) {
-        chain = "#1#" + String(peso, 1) + String("#bajo");
+        chain = "#1#" + String(peso, 1) + String("#bajo#");
       } else {
         // No hay liquido, no hacer nada
       }
@@ -88,7 +88,7 @@ void loop() {
         digitalWrite(waterPumPin, LOW);
       }
     } else {
-      Serial.write("#0");
+      Serial.write("#0#");
     }
   }
 
