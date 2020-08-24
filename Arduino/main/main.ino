@@ -69,23 +69,22 @@ void loop() {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
       if (waterDistance < 4) {
         String chain = "#1#" + String(peso, 1) + String("#alto");
-        //        char* CharString;
-        //        chain.toCharArray(CharString, chain.length());
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
 
-        //        Serial.println(CharString);
-        //        Serial.write(CharString);
-        Serial.write("#1#56.7#alto");
+        Serial.println(CharString);
+        Serial.write(CharString);
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 4 && waterDistance < 7) {
         String chain = "#1#" + String(peso, 1) + String("#medio");
-        //        char* CharString;
-        //        chain.toCharArray(CharString, chain.length());
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
 
-        //        Serial.println(CharString);
-        //        Serial.write(CharString);
+        Serial.println(CharString);
+        Serial.write(CharString);
         Serial.write("#1#56.7#medio");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
@@ -93,11 +92,11 @@ void loop() {
         digitalWrite(waterPumPin, LOW);
       } else if (waterDistance >= 7 && waterDistance < 11) {
         String chain = "#1#" + String(peso, 1) + String("#bajo");
-        //        char* CharString;
-        //        chain.toCharArray(CharString, chain.length());
-        //
-        //        Serial.println(CharString);
-        //        Serial.write(CharString);
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
+
+        Serial.println(CharString);
+        Serial.write(CharString);
         Serial.write("#1#56.7#bajo");
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
@@ -113,7 +112,6 @@ void loop() {
     }
   }
 
-  Serial.println("");
   delay(2000);
 }
 
