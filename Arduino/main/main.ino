@@ -56,47 +56,62 @@ void loop() {
     peso = peso * -1;
   }
 
-  Serial.print("Valor de lectura: ");
-  Serial.println(peso, 1);
-
   //------------------------------------------------------
   // Acciones
   //------------------------------------------------------
   // 1. Si el switch está HIGH, la puerta está cerrada
   if (digitalRead(magneticPin) == HIGH) {
-    Serial.println("Cerrado buzon");
+    // Imprimir valor en consola
+    Serial.println(peso, 1);
+    // Serial.println("Cerrado buzon");
     // 2. Si hay peso, hay paquete
     if (peso > 20) {
       // 3. Rociar (If separado por si acaso necesitamos hacer algo distinto dependiendo del nivel de liquido)
-      if (waterDistance < 10) {
-         Serial.println("Alto");
+      if (waterDistance < 4) {
+        String chain = "#1#" + String(peso, 1) + String("#alto");
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
+
+        Serial.println(CharString);
+        Serial.write(CharString);
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
-      } else if (waterDistance >= 10 && waterDistance < 20) {
-         Serial.println("Medio");
+      } else if (waterDistance >= 4 && waterDistance < 7) {
+        String chain = "#1#" + String(peso, 1) + String("#medio");
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
+
+        Serial.println(CharString);
+        Serial.write(CharString);
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
-      } else if (waterDistance >= 30 && waterDistance < 30) {
-         Serial.println("Bajo");
+      } else if (waterDistance >= 7 && waterDistance < 11) {
+        String chain = "#1#" + String(peso, 1) + String("#bajo");
+        char* CharString;
+        chain.toCharArray(CharString, chain.length());
+
+        Serial.println(CharString);
+        Serial.write(CharString);
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(500);
         digitalWrite(waterPumPin, LOW);
       } else {
-         Serial.println("No hay");
+        // Serial.println("No hay");
         // No hay liquido, no hacer nada
         digitalWrite(waterPumPin, LOW);
       }
+    } else {
+      Serial.println("#0");
+      Serial.write("#0");
     }
-  } else {
-    Serial.println("Abierto buzon");
   }
 
-  delay(500);
+  delay(2000);
 }
 
 void Calibrar(void)
@@ -116,7 +131,7 @@ void Calibrar(void)
   }
 
   Serial.println("Retirar peso");
-  
+
   for (int i = 0; i < 3; i++) {
     delay(1000);
   }

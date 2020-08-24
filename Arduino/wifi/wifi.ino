@@ -10,102 +10,119 @@ void setup() {
   Serial.begin(115200);
   // Configurar la informacion para conexion WiFi
   WiFi.begin(ssid, password);
-  Serial.println("Connection begin");
+  Serial.println("Comenzando conexión");
 
   while (WiFi.status() != WL_CONNECTED) { // Esperar a la conexion WiFi
     delay(500);
-    Serial.println("Waiting for connection");
+    Serial.println("Esperando a conexión");
   }
-}
 
-float peso = 0;
-float temperatura = 0;
-int aire;
-int liquido;
-int contador = 0;
-float ultimo;
+  Serial.println("Conectado");
+}
 
 void loop() {
   // Verificar si estamos conectados
   if (WiFi.status() == WL_CONNECTED) {
     if (Serial.available()) {
       String datos = Serial.readString();
-      int cont = 0;
+      int expectedRead = 0; // 0: Objeto 1: Peso 2: Liquido
       String val = "";
+
+      int hayObjeto = 0;
+      float peso = 0.0;
+      String liquido = "no_hay";
+
+      bool sendPost = true;
+
       for (int i = 0; i < datos.length(); i++) {
+        if (i == 0) {
+          // Verificar que inicie en el formato que deseamos, sino salir de este ciclo
+          if (datos[i] == '#') {
+            continue;
+          } else {
+            sendPost = false;
+            break;
+          }
+        }
+
+        // Si volvemos a encontrar # significa el final de un valor
         if (datos[i] == '#') {
-          switch (cont) {
+          switch (expectedRead) {
             case 0: {
-                peso = val.toInt();
-                val = "";
+                hayObjeto = val.toInt();
                 break;
               }
             case 1: {
-                temperatura = stof(val);
-                val = "";
+                peso = stof(val);
                 break;
               }
             case 2: {
-                aire = val.toInt();
-                val = "";
+                liquido = val;
                 break;
               }
-            case 3: {
-                liquido = val.toInt();
-                if (liquido == 1) {
-                  liquido = 0;
-                } else {
-                  liquido = 1;
-                }
-                val == "";
-                break;
-              }
-            case 4: {
-                contador = val.toInt();
-                val = "";
-                break;
-              }
-            case 5:
-              ultimo = stof(val);
+            default:
+              break;
           }
-          cont++;
+
+          // Limpiar valor y comenzar de nuevo
+          val = "";
+          expectedRead++;
         } else {
+          // Concatenar valor
           val += datos[i];
         }
       }
-      enviar(1, peso);
-      enviar(2, temperatura);
-      enviar(3, aire);
-      enviar(4, liquido);
+
+      if (sendPost) {
+        enviar(hayObjeto, peso, liquido);
+      }
     }
   } else {
     Serial.println("Error en conexión WiFi");
   }
 }
 
-void enviar(int tipo, double valor) {
+void enviar(int hayObjeto, float peso, String liquido) {
   // Declarar JSON buffer estático
-  StaticJsonDocument<200> JSONbuffer;
-  JSONbuffer["type"] = tipo;
-  JSONbuffer["user"] = 5;
-  JSONbuffer["value"] = valor;
-  char JSONmessageBuffer[200];
-  serializeJson(JSONbuffer, JSONmessageBuffer, 200);
+  StaticJsonDocument<80> JSONbuffer;
+
+  JSONbuffer["existe"] = hayObjeto;
+  JSONbuffer["peso"] = peso;
+
+  char JSONmessageBuffer[80];
+  serializeJson(JSONbuffer, JSONmessageBuffer, 80);
+
+
+
+  StaticJsonDocument<50> JSONbuffer2;
+  JSONbuffer2["nivel"] = liquido;
+  char JSONmessageBuffer2[50];
+  serializeJson(JSONbuffer2, JSONmessageBuffer2, 50);
+
+
   // Imprimir mensaje en consola para verificar
   Serial.println(JSONmessageBuffer);
+  Serial.println(JSONmessageBuffer2);
+
   // Declarar objeto de la clase HTTPClient
   HTTPClient http;
   // Indicar ruta de servidor
-  http.begin("http://134.209.4.117:3600/store");
+  http.begin("http://167.99.237.132:3600/bitacora");
   http.addHeader("Content-Type", "application/json");
   // Enviar petición POST
   int httpCode = http.POST(JSONmessageBuffer);
   // Obtener respuesta e imprimir información
-  String payload = http.getString();
-  Serial.println(httpCode);
-  Serial.println(payload);
+  // String payload = http.getString();
+  // Serial.println(httpCode);
+  // Serial.println(payload);
   // Cerrar conexión
   http.end();
+
+  HTTPClient http2;
+  http2.begin("http://167.99.237.132:3600/liquido");
+  http2.addHeader("Content-Type", "application/json");
+  http2.POST(JSONmessageBuffer2);
+  http2.end();
 }
 
 float stof(String Texto) {
