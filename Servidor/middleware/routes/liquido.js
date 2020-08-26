@@ -9,7 +9,7 @@ router.post('/liquido', function(req, res, next) {
 
     let liquidoData = {};
 
-    liquidoData['liquido'] = req.body.liquido;
+    liquidoData['nivel'] = req.body.liquido;
    
 
     const ip = req.clientIp;

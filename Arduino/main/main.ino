@@ -61,7 +61,7 @@ void loop() {
   // 1. Si el switch está HIGH, la puerta está cerrada
   if (digitalRead(magneticPin) == HIGH) {
     // Imprimir valor en consola
-    // Serial.println(peso, 1);
+    bool rociar = true;
     // 2. Si hay peso, hay paquete
     if (peso > 20) {
       String chain = "";
@@ -73,15 +73,15 @@ void loop() {
       } else if (waterDistance >= 7 && waterDistance < 11) {
         chain = "#1#" + String(peso, 1) + String("#bajo#");
       } else {
-        // No hay liquido, no hacer nada
+        chain = "#1#" + String(peso, 1) + String("#no_hay#");
+        rociar = false;
       }
 
       int str_len = chain.length() + 1;
-      
-      if (str_len > 1) {
-        char CharString[str_len];
-        chain.toCharArray(CharString, str_len);
-        Serial.write(CharString);
+      char CharString[str_len];
+      chain.toCharArray(CharString, str_len);
+      Serial.write(CharString);
+      if (rociar) {
         digitalWrite(waterPumPin, HIGH);
         // Esperar y rociar por 1 segundo, luego apagar la bomba
         delay(1000);
