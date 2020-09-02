@@ -87,13 +87,15 @@ A continuacion se describe el contenido de la notificacion push:
 1. Cuando recibis una llamada hacia "/envio/salida"
 
 {
+    accion: <salida>,
     peso: <numero>,
     timestamp: <numero en milisegundos>
 }
 
-2. Cuando recibis una llamda hacia "/envio/entrega"
+2. Cuando recibis una llamada hacia "/envio/entrega"
 
 {
+    accion: <entrega>,
     peso: <numero>,
     timestamp: <numero en milisegundos>(Formatear en la app movil),
     obstaculos: <numero>
@@ -102,7 +104,22 @@ A continuacion se describe el contenido de la notificacion push:
 3. Cuando recibis una llamada hacia "/envio/regreso"
 
 {
+    accion: <regreso>,
     timestamp: <numero en milisegundos>(Formatear en la app movil),
     obstaculos: <numero>
 }
 
+
+JSONObject pushBody = ...
+
+switch (pushBody.accion) {
+    case "salida":
+        // hacer tu logica para mostrar una notificacion
+        break;
+    case "entrega":
+        // hacer tu logica para mostrar una notificacion
+        break;
+    case "regreso":
+        // hacer tu logica para mostrar una notificacion
+        break;
+}
