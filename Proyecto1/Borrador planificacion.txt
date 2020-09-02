@@ -1,0 +1,108 @@
+ARDUINO - API
+
+POST /envio/salida
+
+{
+    peso: <numero>,
+    timestamp: <hora de salida en milisegundos>
+}
+
+Retornar
+
+{
+    id: <objectId de Mongo>
+}
+
+------------------------------------------------
+
+POST /envio/regreso
+
+{
+    timestamp: <hora de regreso en milisegundos>,
+    obstaculos: <numero> (0-infinito)
+}
+
+Sin retorno
+
+------------------------------------------------
+
+POST /envio/entrega
+
+{
+    id: <objectId>,
+    peso: <numero>,
+    timestamp: <hora de entrega en milisegundos>,
+    obstaculos: <numero> (0-infinito)
+}
+
+Sin retorno
+
+------------------------------------------------
+
+POST /vehiculo/progreso
+
+{
+    id: <objectId> (Opcional en el caso de "reposo", obligatorio en los demas),
+    estado: <ida/retorno/obstaculo/reposo>
+}
+
+Sin retorno
+
+------------------------------------------------
+------------------------------------------------
+
+API - APP MOVIL
+
+
+GET /dashboard
+
+Retornar:
+
+{
+    ubicacion: <buzon/cliente>(Si "estado" es "reposo", enviar "buzon", lo demas "cliente"),
+    estado: <ida/retorno/obstaculo/reposo>("estado" recibido en vehiculo/progreso),
+    total_contador: <numero de paquetes encontrados>(En cada invocacion de envio/entrega, se debe aumentar el contador),
+    total_obstaculos: <numero de obstaculos>(En cada invocacion de vehiculo/progreso con estado "obstaculo", se debe aumentar el contador),
+    peso_promedio: <numero float de promedio>,
+    tiempo_promedio_ida: <numero en segundos de tiempo entre salida y llegada a punto de entrega>,
+    tiempo_promedio_regreso: <numero en segundos de tiempo entre regreso de punto de entrega y entrada a buzon>
+}
+
+------------------------------------------------
+
+POST /vehiculo/modo
+
+{
+    modo: <activo/inactivo>
+}
+
+Sin retorno
+
+------------------------------------------------
+PUSH NOTIFICATIONS
+------------------------------------------------
+
+A continuacion se describe el contenido de la notificacion push:
+
+1. Cuando recibis una llamada hacia "/envio/salida"
+
+{
+    peso: <numero>,
+    timestamp: <numero en milisegundos>
+}
+
+2. Cuando recibis una llamda hacia "/envio/entrega"
+
+{
+    peso: <numero>,
+    timestamp: <numero en milisegundos>(Formatear en la app movil),
+    obstaculos: <numero>
+}
+
+3. Cuando recibis una llamada hacia "/envio/regreso"
+
+{
+    timestamp: <numero en milisegundos>(Formatear en la app movil),
+    obstaculos: <numero>
+}
+
