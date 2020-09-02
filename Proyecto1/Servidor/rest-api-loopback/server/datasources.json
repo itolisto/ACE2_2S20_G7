@@ -1,0 +1,14 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+ 
+  "mongoDB": {
+    "url": "mongodb+srv://arq2:BHGcbOQzKR1fQdry@cluster0-wjyjx.mongodb.net/arq2?retryWrites=true&w=majority",
+    "connector": "mongodb"
+  }
+  
+  }
+
+
