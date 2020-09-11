@@ -3,8 +3,7 @@ ARDUINO - API
 POST /envio/salida
 
 {
-    peso: <numero>,
-    timestamp: <hora de salida en milisegundos>
+    peso: <numero>
 }
 
 Retornar
@@ -18,7 +17,6 @@ Retornar
 POST /envio/regreso
 
 {
-    timestamp: <hora de regreso en milisegundos>,
     obstaculos: <numero> (0-infinito)
 }
 
@@ -31,7 +29,6 @@ POST /envio/entrega
 {
     id: <objectId>,
     peso: <numero>,
-    timestamp: <hora de entrega en milisegundos>,
     obstaculos: <numero> (0-infinito)
 }
 
