@@ -11,10 +11,10 @@ const int DOUTPIN = A1;
 const int PESO_CONOCIDO = 401; // Gramos
 HX711 balanza;
 // Pines de sensores de color MH
-const int FRONT1PIN = A2;
-const int FRONT2PIN = A3;
-const int BACK1PIN = A4;
-const int BACK2PIN = A5;
+const int FRONT2PIN = A2; // Izquierda
+const int FRONT1PIN = A3; // Derecha
+const int BACK1PIN = A4; // Izquierda
+const int BACK2PIN = A5; // Derecha
 // Pines de motores
 #define Motor11 7
 #define Motor12 6
@@ -25,7 +25,7 @@ const int BACK2PIN = A5;
 int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
 int valuePWM2 = 110; // Velocidad de motores cuando giran
 // Variables de configuración
-bool activo = true; // Si es falso no ejecuta ninguna accion, de lo contrario, camina.
+bool activo = false; // Si es falso no ejecuta ninguna accion, de lo contrario, camina.
 bool obstaculo_detectado = false; // Si es falso, permite seguir el desplazamiento del carro
 bool yaSeMovio = false;
 
@@ -225,11 +225,11 @@ bool desplazarse(int orientacion) {
   int RIGHT_SENSOR = 0;
 
   if (orientacion == 1) {
-    LEFT_SENSOR = analogRead(FRONT1PIN);
-    RIGHT_SENSOR = analogRead(FRONT2PIN);
+    LEFT_SENSOR = analogRead(FRONT2PIN);
+    RIGHT_SENSOR = analogRead(FRONT1PIN);
   } else {
-    LEFT_SENSOR = analogRead(BACK2PIN);
-    RIGHT_SENSOR = analogRead(BACK1PIN);
+    LEFT_SENSOR = analogRead(BACK1PIN);
+    RIGHT_SENSOR = analogRead(BACK2PIN);
   }
 
   bool detenerse = false;
