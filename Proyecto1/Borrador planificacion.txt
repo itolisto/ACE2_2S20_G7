@@ -6,11 +6,7 @@ POST /envio/salida
     peso: <numero>
 }
 
-Retornar
-
-{
-    id: <objectId de Mongo>
-}
+Sin retorno
 
 ------------------------------------------------
 
@@ -27,7 +23,6 @@ Sin retorno
 POST /envio/entrega
 
 {
-    id: <objectId>,
     peso: <numero>,
     obstaculos: <numero> (0-infinito)
 }
@@ -39,7 +34,6 @@ Sin retorno
 POST /vehiculo/progreso
 
 {
-    id: <objectId> (Opcional en el caso de "reposo", obligatorio en los demas),
     estado: <ida/retorno/obstaculo/reposo>
 }
 

@@ -101,7 +101,7 @@ void loop() {
       // Actualizar estado
       obstaculo_detectado = true;
       // Publicar nuevo estado
-      publicarEnConsola("#obstaculo#");
+      publicarEnConsola("#update#obstaculo#");
     }
     // Impedir cualquier movimiento por medio de retorno
     delay(1000);
@@ -132,7 +132,7 @@ void loop() {
     if (mover || yaSeMovio) {
       yaSeMovio = true;
       // Publicar nuevo estado
-      publicarEnConsola("#ida#");
+      publicarEnConsola("#update#ida#");
       // Desplazarse
       bool detenerse = desplazarse(orientacion);
       // Si se activa detener, cambiar orientacion
@@ -157,7 +157,7 @@ void loop() {
     if (mover || yaSeMovio) {
       yaSeMovio = true;
       // Publicar nuevo estado
-      publicarEnConsola("#retorno#");
+      publicarEnConsola("#update#retorno#");
       // Desplazarse
       bool detenerse = desplazarse(orientacion);
       // Si se activa detener, cambiar orientacion
