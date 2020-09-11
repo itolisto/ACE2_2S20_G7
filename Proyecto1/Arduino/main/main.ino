@@ -22,8 +22,8 @@ const int BACK2PIN = A5;
 #define Motor22 8
 #define PWMmotor1 5
 #define PWMmotor2 10
-int valuePWM1 = 120; // speed motor 1
-int valuePWM2 = 150; // speed motor 2
+int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
+int valuePWM2 = 110; // Velocidad de motores cuando giran
 // Variables de configuración
 bool activo = true; // Si es falso no ejecuta ninguna accion, de lo contrario, camina.
 bool obstaculo_detectado = false; // Si es falso, permite seguir el desplazamiento del carro
@@ -221,7 +221,76 @@ float obtenerPeso() {
 }
 
 bool desplazarse(int orientacion) {
-  return true;
+  int LEFT_SENSOR = 0;
+  int RIGHT_SENSOR = 0;
+
+  if (orientacion == 1) {
+    LEFT_SENSOR = analogRead(FRONT1PIN);
+    RIGHT_SENSOR = analogRead(FRONT2PIN);
+  } else {
+    LEFT_SENSOR = analogRead(BACK2PIN);
+    RIGHT_SENSOR = analogRead(BACK1PIN);
+  }
+
+  bool detenerse = false;
+
+  if (RIGHT_SENSOR < 36 && LEFT_SENSOR < 36) {
+    // Adelante
+    if (orientacion == 1) {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
+    }
+    analogWrite(PWMmotor1, valuePWM1);
+    analogWrite(PWMmotor2, valuePWM1);
+  } else if (RIGHT_SENSOR > 36 && LEFT_SENSOR < 36) {
+    // Izquierda
+    if (orientacion == 1) {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
+    }
+
+    analogWrite(PWMmotor1, valuePWM2);
+    analogWrite(PWMmotor2, valuePWM2);
+  } else if (RIGHT_SENSOR < 36 && LEFT_SENSOR > 35) {
+    // Derecha
+    if (orientacion == 1) {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
+    } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
+    }
+
+    analogWrite(PWMmotor1, valuePWM2);
+    analogWrite(PWMmotor2, valuePWM2);
+  } else if (RIGHT_SENSOR > 35 && LEFT_SENSOR > 35) {
+    // Detenerse
+    detenerse = true;
+    digitalWrite(Motor11, LOW);
+    digitalWrite(Motor12, LOW);
+    digitalWrite(Motor21, LOW);
+    digitalWrite(Motor22, LOW);
+  }
+
+  return detenerse;
 }
 
 void publicarEnConsola(String cadena) {
