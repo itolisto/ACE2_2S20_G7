@@ -25,14 +25,14 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     if (Serial.available()) {
       String datos = Serial.readString();
-      int expectedRead = 0; // 0: Objeto 1: Peso 2: Liquido
       String val = "";
 
-      int hayObjeto = 0;
-      float peso = 0.0;
-      String liquido = "no_hay";
+      String accion = "";
+      int expectedRead = 0;
 
-      bool sendPost = true;
+      float peso = 0.0;
+
+      bool accionDefinida = false;
 
       for (int i = 0; i < datos.length(); i++) {
         if (i == 0) {
@@ -40,28 +40,38 @@ void loop() {
           if (datos[i] == '#') {
             continue;
           } else {
-            sendPost = false;
             break;
           }
         }
 
         // Si volvemos a encontrar # significa el final de un valor
         if (datos[i] == '#') {
-          switch (expectedRead) {
-            case 0: {
-                hayObjeto = val.toInt();
-                break;
-              }
-            case 1: {
-                peso = stof(val);
-                break;
-              }
-            case 2: {
-                liquido = val;
-                break;
-              }
-            default:
+          if (accionDefinida == false) {
+            accion = val;
+            accionDefinida = true;
+          } else {
+            if (accion == "update") {
+              enviarUpdate(val);
+              // Salir de ciclo, ya no nos interesa nada mas
               break;
+            } else if (accion == "salida") {
+              enviarSalida(stof(val));
+              // Salir de ciclo, ya no nos interesa nada mas
+              break;
+            } else if (accion == "entrega") {
+              switch (expectedRead) {
+                case 1: {
+                    peso = stof(val);
+                    break;
+                  }
+                default: {
+                    enviarEntrega(peso, val.toInt());
+                    break;
+                  }
+              }
+            } else if (accion == "regreso") {
+              enviarRegreso(val.toInt());
+            }
           }
 
           // Limpiar valor y comenzar de nuevo
@@ -72,42 +82,24 @@ void loop() {
           val += datos[i];
         }
       }
-
-      if (sendPost) {
-        enviar(hayObjeto, peso, liquido);
-      }
     }
   } else {
     Serial.println("Error en conexión WiFi");
   }
 }
 
-void enviar(int hayObjeto, float peso, String liquido) {
+void enviarUpdate(String estado) {
   // Declarar JSON buffer estático
-  StaticJsonDocument<80> JSONbuffer;
-
-  JSONbuffer["existe"] = hayObjeto;
-  JSONbuffer["peso"] = peso;
-
-  char JSONmessageBuffer[80];
-  serializeJson(JSONbuffer, JSONmessageBuffer, 80);
-
-
-
-  StaticJsonDocument<50> JSONbuffer2;
-  JSONbuffer2["liquido"] = liquido;
-  char JSONmessageBuffer2[50];
-  serializeJson(JSONbuffer2, JSONmessageBuffer2, 50);
-
-
+  StaticJsonDocument<30> JSONbuffer;
+  JSONbuffer["estado"] = estado;
+  char JSONmessageBuffer[30];
+  serializeJson(JSONbuffer, JSONmessageBuffer, 30);
   // Imprimir mensaje en consola para verificar
   Serial.println(JSONmessageBuffer);
-  Serial.println(JSONmessageBuffer2);
-
   // Declarar objeto de la clase HTTPClient
   HTTPClient http;
   // Indicar ruta de servidor
-  http.begin("http://167.99.237.132:3600/bitacora");
+  http.begin("http://167.99.237.132:3600/vehiculo/progreso");
   http.addHeader("Content-Type", "application/json");
   // Enviar petición POST
   int httpCode = http.POST(JSONmessageBuffer);
@@ -117,12 +109,46 @@ void enviar(int hayObjeto, float peso, String liquido) {
   // Serial.println(payload);
   // Cerrar conexión
   http.end();
+}
 
-  HTTPClient http2;
-  http2.begin("http://167.99.237.132:3600/liquido");
-  http2.addHeader("Content-Type", "application/json");
-  http2.POST(JSONmessageBuffer2);
-  http2.end();
+void enviarSalida(float peso) {
+  StaticJsonDocument<30> JSONbuffer;
+  JSONbuffer["peso"] = peso;
+  char JSONmessageBuffer[30];
+  serializeJson(JSONbuffer, JSONmessageBuffer, 30);
+  Serial.println(JSONmessageBuffer);
+  HTTPClient http;
+  http.begin("http://167.99.237.132:3600/envio/salida");
+  http.addHeader("Content-Type", "application/json");
+  int httpCode = http.POST(JSONmessageBuffer);
+  http.end();
+}
+
+void enviarRegreso(int obstaculos) {
+  StaticJsonDocument<25> JSONbuffer;
+  JSONbuffer["obstaculos"] = obstaculos;
+  char JSONmessageBuffer[25];
+  serializeJson(JSONbuffer, JSONmessageBuffer, 25);
+  Serial.println(JSONmessageBuffer);
+  HTTPClient http;
+  http.begin("http://167.99.237.132:3600/envio/regreso");
+  http.addHeader("Content-Type", "application/json");
+  int httpCode = http.POST(JSONmessageBuffer);
+  http.end();
+}
+
+void enviarEntrega(float peso, int obstaculos) {
+  StaticJsonDocument<65> JSONbuffer;
+  JSONbuffer["peso"] = peso;
+  JSONbuffer["obstaculos"] = obstaculos;
+  char JSONmessageBuffer[65];
+  serializeJson(JSONbuffer, JSONmessageBuffer, 65);
+  Serial.println(JSONmessageBuffer);
+  HTTPClient http;
+  http.begin("http://167.99.237.132:3600/envio/entrega");
+  http.addHeader("Content-Type", "application/json");
+  int httpCode = http.POST(JSONmessageBuffer);
+  http.end();
 }
 
 float stof(String Texto) {
