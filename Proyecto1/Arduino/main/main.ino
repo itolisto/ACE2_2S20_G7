@@ -55,8 +55,7 @@ void setup() {
 
 void loop() {
   // 1. Leer consola serial para saber si debemos cambiar el estado de activo
-  // Si ya se movio, ignorar hasta que alcance el punto de entrega o de salida
-  if (Serial.available() && yaSeMovio == false) {
+  if (Serial.available()) {
     String valorActivo = "";
     String datos = Serial.readString();
 
@@ -303,8 +302,7 @@ void publicarEnConsola(String cadena) {
   Serial.write(CharString);
 }
 
-void calibrarBalanza(void)
-{
+void calibrarBalanza(void) {
   float medicion = 0;
   balanza.set_scale(); // La escala por defecto es 1
   balanza.tare(20);  // Peso muerto de la balanza
