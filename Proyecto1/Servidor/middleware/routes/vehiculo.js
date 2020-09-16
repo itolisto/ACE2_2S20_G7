@@ -25,7 +25,8 @@ router.post('/vehiculo/progreso', function(req, res, next) {
         })
         .then(function (response) {
             // handle success
-            vehiculoData['id']= response.data[0]['id'];
+            vehiculoData['idviaje']= response.data[0]['id'];
+            console.log('identificador'+vehiculoData['id']);
              //res.status(200).json(response.data[0]);
 
             axios({
