@@ -50,7 +50,11 @@ void setup() {
   pinMode(BACK2PIN, INPUT); // Sensor trasero izquierdo
   // Configurar sensor de peso
   balanza.begin(DOUTPIN, CLKPIN);
-  calibrarBalanza();
+  balanza.set_scale(); // La escala por defecto es 1
+  balanza.tare(20);  // Peso muerto de la balanza
+  balanza.get_value(20);
+  delay(250);
+  balanza.set_scale(-379.56027);
 }
 
 void loop() {
@@ -300,27 +304,4 @@ void publicarEnConsola(String cadena) {
   char CharString[str_len];
   cadena.toCharArray(CharString, str_len);
   Serial.write(CharString);
-}
-
-void calibrarBalanza(void) {
-  float medicion = 0;
-  balanza.set_scale(); // La escala por defecto es 1
-  balanza.tare(20);  // Peso muerto de la balanza
-
-  Serial.println("7 segundos para colocar peso");
-  delay(7000);
-  // Calibrar al hacer promedio de tres mediciones
-  for (int i = 0; i < 3; i++) {
-    Serial.println("Midiendo");
-    medicion = medicion + balanza.get_value(20); // Mediciones antes de regresar peso
-    delay(1000);
-  }
-  // Configurar
-  Serial.println("4 segundos para retirar peso");
-  delay(4000);
-  Serial.println("Peso deberia estar retirado para este momento");
-  float escala = (medicion / 3) / PESO_CONOCIDO;
-  balanza.set_scale(escala);
-  delay(500);
-  Serial.println("Balanza configurada");
 }
