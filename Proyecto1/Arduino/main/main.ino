@@ -55,7 +55,8 @@ void setup() {
 
 void loop() {
   // 1. Leer consola serial para saber si debemos cambiar el estado de activo
-  if (Serial.available()) {
+  // Si ya se movio, ignorar hasta que alcance el punto de entrega o de salida
+  if (Serial.available() && yaSeMovio == false) {
     String valorActivo = "";
     String datos = Serial.readString();
 
@@ -239,28 +240,28 @@ bool desplazarse(int orientacion) {
     if (orientacion == 1) {
       digitalWrite(Motor11, HIGH);
       digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, HIGH);
-      digitalWrite(Motor22, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
     } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, HIGH);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
     }
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);
   } else if (RIGHT_SENSOR > 36 && LEFT_SENSOR < 36) {
     // Izquierda
     if (orientacion == 1) {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, HIGH);
-      digitalWrite(Motor21, HIGH);
-      digitalWrite(Motor22, LOW);
-    } else {
       digitalWrite(Motor11, HIGH);
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
     }
 
     analogWrite(PWMmotor1, valuePWM2);
@@ -268,14 +269,14 @@ bool desplazarse(int orientacion) {
   } else if (RIGHT_SENSOR < 36 && LEFT_SENSOR > 35) {
     // Derecha
     if (orientacion == 1) {
-      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, HIGH);
     } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, HIGH);
-      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, LOW);
     }
 
@@ -288,6 +289,8 @@ bool desplazarse(int orientacion) {
     digitalWrite(Motor12, LOW);
     digitalWrite(Motor21, LOW);
     digitalWrite(Motor22, LOW);
+    analogWrite(PWMmotor1, 0);
+    analogWrite(PWMmotor2, 0);
   }
 
   return detenerse;
