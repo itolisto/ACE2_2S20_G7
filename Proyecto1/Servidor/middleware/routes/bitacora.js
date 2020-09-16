@@ -14,7 +14,6 @@ var message = { //this may vary according to the message type (single recipient,
         title: 'Objeto Depositado', 
         body: 'Se ha depositado un objeto en tu buzon, revisarlo' 
     },
-    
     data: {  //you can send only notification or only data(or include both)
         my_key: 'my value',
         my_another_key: 'my another value'

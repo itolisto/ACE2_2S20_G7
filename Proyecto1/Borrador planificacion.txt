@@ -35,7 +35,7 @@ POST /vehiculo/progreso
 
 {
     estado: <ida/retorno/obstaculo/reposo>
-}
+} 
 
 Sin retorno
 
@@ -77,7 +77,7 @@ A continuacion se describe el contenido de la notificacion push:
 
 1. Cuando recibis una llamada hacia "/envio/salida"
 
-{
+{ZE
     accion: <salida>,
     peso: <numero>,
     timestamp: <numero en milisegundos>

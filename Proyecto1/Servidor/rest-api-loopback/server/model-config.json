@@ -42,5 +42,17 @@
   "liquido": {
     "dataSource": "mongoDB",
     "public": true
+  },
+  "viaje": {
+    "dataSource": "mongoDB",
+    "public": true
+  },
+  "detalleviaje": {
+    "dataSource": "mongoDB",
+    "public": true
+  },
+  "estadistica": {
+    "dataSource": "mongoDB",
+    "public": true
   }
 }
