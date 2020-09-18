@@ -100,6 +100,13 @@ void loop() {
   if (distanciaAObstaculo < 15) {
     // Actualizar solamente si hubo un cambio de estado
     if (obstaculo_detectado == false) {
+      // Forzar los motores a parar
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, LOW);
+      analogWrite(PWMmotor1, 0);
+      analogWrite(PWMmotor2, 0);
       // Subir contador
       sumarObstaculos(orientacion);
       // Actualizar estado
@@ -238,7 +245,9 @@ bool desplazarse(int orientacion) {
 
   bool detenerse = false;
 
-  if (RIGHT_SENSOR < 36 && LEFT_SENSOR < 36) {
+  int base_limit = 90;
+
+  if (RIGHT_SENSOR < base_limit && LEFT_SENSOR < base_limit) {
     // Adelante
     if (orientacion == 1) {
       digitalWrite(Motor11, HIGH);
@@ -253,39 +262,39 @@ bool desplazarse(int orientacion) {
     }
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);
-  } else if (RIGHT_SENSOR > 36 && LEFT_SENSOR < 36) {
+  } else if (RIGHT_SENSOR > base_limit && LEFT_SENSOR < base_limit) {
     // Izquierda
     if (orientacion == 1) {
-      digitalWrite(Motor11, HIGH);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, LOW);
-    } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
-    }
-
-    analogWrite(PWMmotor1, valuePWM2);
-    analogWrite(PWMmotor2, valuePWM2);
-  } else if (RIGHT_SENSOR < 36 && LEFT_SENSOR > 35) {
-    // Derecha
-    if (orientacion == 1) {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
     } else {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, LOW);
     }
 
     analogWrite(PWMmotor1, valuePWM2);
     analogWrite(PWMmotor2, valuePWM2);
-  } else if (RIGHT_SENSOR > 35 && LEFT_SENSOR > 35) {
+  } else if (RIGHT_SENSOR < base_limit && LEFT_SENSOR > base_limit) {
+    // Derecha
+    if (orientacion == 1) {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
+    }
+
+    analogWrite(PWMmotor1, valuePWM2);
+    analogWrite(PWMmotor2, valuePWM2);
+  } else if (RIGHT_SENSOR > base_limit && LEFT_SENSOR > base_limit) {
     // Detenerse
     detenerse = true;
     digitalWrite(Motor11, LOW);

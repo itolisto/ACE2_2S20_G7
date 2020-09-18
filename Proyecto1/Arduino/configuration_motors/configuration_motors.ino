@@ -5,8 +5,8 @@ int Motor21 = 8;
 int Motor22 = 9;
 int PWMmotor1 = 5;
 int PWMmotor2 = 10;
-int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
-int valuePWM2 = 110; // Velocidad de motores cuando giran
+int valuePWM1 = 10; // Velocidad de motores cuando se mueven hacia el frente
+int valuePWM2 = 0; // Velocidad de motores cuando giran
 
 void setup() {
   pinMode(Motor11, OUTPUT);
@@ -40,38 +40,39 @@ void desplazarse(int orientacion) {
 
 
   // Izquierda adelante
-  //    digitalWrite(Motor11, HIGH);
-  //    digitalWrite(Motor12, LOW);
-  //    digitalWrite(Motor21, LOW);
-  //    digitalWrite(Motor22, LOW);
+  //      digitalWrite(Motor11, LOW);
+  //      digitalWrite(Motor12, LOW);
+  //      digitalWrite(Motor21, HIGH);
+  //      digitalWrite(Motor22, LOW);
 
   // Izquierda atras
-  //    digitalWrite(Motor11, LOW);
-  //    digitalWrite(Motor12, LOW);
-  //    digitalWrite(Motor21, HIGH);
-  //    digitalWrite(Motor22, LOW);
+//  digitalWrite(Motor11, HIGH);
+//  digitalWrite(Motor12, LOW);
+//  digitalWrite(Motor21, LOW);
+//  digitalWrite(Motor22, LOW);
 
 
 
   // Derecha adelante
-  //    digitalWrite(Motor11, LOW);
-  //    digitalWrite(Motor12, LOW);
-  //    digitalWrite(Motor21, LOW);
-  //    digitalWrite(Motor22, HIGH);
-
-  // Derecha atras
   //  digitalWrite(Motor11, LOW);
   //  digitalWrite(Motor12, HIGH);
   //  digitalWrite(Motor21, LOW);
   //  digitalWrite(Motor22, LOW);
 
+  // Derecha atras
+//  digitalWrite(Motor11, LOW);
+//  digitalWrite(Motor12, LOW);
+//  digitalWrite(Motor21, LOW);
+//  digitalWrite(Motor22, HIGH);
+
+
 
 
   // Detenerse
-  digitalWrite(Motor11, LOW);
-  digitalWrite(Motor12, LOW);
-  digitalWrite(Motor21, LOW);
-  digitalWrite(Motor22, LOW);
+  //      digitalWrite(Motor11, LOW);
+  //      digitalWrite(Motor12, LOW);
+  //      digitalWrite(Motor21, LOW);
+  //      digitalWrite(Motor22, LOW);
 
   delay(500);
 
