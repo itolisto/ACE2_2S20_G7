@@ -20,8 +20,8 @@ void loop() {
   int BLEFT_SENSOR = analogRead(BACK1PIN);
   int BRIGHT_SENSOR = analogRead(BACK2PIN);
 
-  Serial.println("Front L:" + String(FLEFT_SENSOR) + String(", R") + String(FRIGHT_SENSOR));
-  Serial.println("Back L:" + String(BLEFT_SENSOR) + String(", R") + String(BRIGHT_SENSOR));
+//  Serial.println("Front L:" + String(FLEFT_SENSOR) + String(", R") + String(FRIGHT_SENSOR));
+//  Serial.println("Back L:" + String(BLEFT_SENSOR) + String(", R") + String(BRIGHT_SENSOR));
 
-  delay(3000);
+  Serial.println("Front Left:" + String(FLEFT_SENSOR));
 }

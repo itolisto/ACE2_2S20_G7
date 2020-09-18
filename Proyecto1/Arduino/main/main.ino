@@ -48,6 +48,13 @@ void setup() {
   pinMode(FRONT2PIN, INPUT); // Sensor frontal izquierdo
   pinMode(BACK1PIN, INPUT); // Sensor trasero derecho
   pinMode(BACK2PIN, INPUT); // Sensor trasero izquierdo
+  // Configurar pines de motor
+  pinMode(Motor11, OUTPUT);
+  pinMode(Motor12, OUTPUT);
+  pinMode(Motor21, OUTPUT);
+  pinMode(Motor22, OUTPUT);
+  pinMode(PWMmotor1, OUTPUT);
+  pinMode(PWMmotor2, OUTPUT);
   // Configurar sensor de peso
   balanza.begin(DOUTPIN, CLKPIN);
   balanza.set_scale(); // La escala por defecto es 1
@@ -90,7 +97,8 @@ void loop() {
 
   // 2. Verificar estado de respuesta actual del carro, si es falso omitir cualquier accion
   if (activo == false) {
-    delay(1000);
+    activo = true;
+    delay(10000);
     return;
   }
 
