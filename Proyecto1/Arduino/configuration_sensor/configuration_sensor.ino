@@ -5,7 +5,7 @@ const int BACK1PIN = A4; // Izquierda
 const int BACK2PIN = A5; // Derecha
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // Configurar sensores de color
   pinMode(FRONT1PIN, INPUT); // Sensor frontal derecho
   pinMode(FRONT2PIN, INPUT); // Sensor frontal izquierdo

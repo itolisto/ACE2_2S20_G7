@@ -4,15 +4,15 @@ const int FRONT1PIN = A3; // Derecha
 const int BACK1PIN = A4; // Izquierda
 const int BACK2PIN = A5; // Derecha
 
-const int frontLeftLimit = 500;
-const int frontRightLimit = 450;
-const int backLeftLimit = 450;
-const int backRightLimit = 410;
+const int frontLeftLimit = 480;
+const int frontRightLimit = 480;
+const int backLeftLimit = 400;
+const int backRightLimit = 400;
 // Pines de motores
 #define Motor11 7
 #define Motor12 6
-#define Motor21 9
-#define Motor22 8
+#define Motor21 8
+#define Motor22 9
 #define PWMmotor1 5
 #define PWMmotor2 10
 int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
@@ -50,9 +50,9 @@ void loop() {
     // Desplazarse
     bool detenerse = desplazarse(orientacion);
     // Si se activa detener, cambiar orientacion
-    //    if (detenerse) {
-    //      orientacion = 2;
-    //    }
+    if (detenerse) {
+      orientacion = 2;
+    }
   } else {
     // Desplazarse
     bool detenerse = desplazarse(orientacion);
@@ -86,7 +86,7 @@ bool desplazarse(int orientacion) {
 
   bool detenerse = false;
 
-  if (RIGHT_SENSOR < LEFT_LIMIT && LEFT_SENSOR < RIGHT_LIMIT) {
+  if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR < LEFT_LIMIT ) {
     // Adelante
     if (orientacion == 1) {
       digitalWrite(Motor11, LOW);
@@ -102,22 +102,6 @@ bool desplazarse(int orientacion) {
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);
   } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR < LEFT_LIMIT) {
-    // Izquierda
-    if (orientacion == 1) {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, HIGH);
-      digitalWrite(Motor22, LOW);
-    } else {
-      digitalWrite(Motor11, HIGH);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, LOW);
-    }
-
-    analogWrite(PWMmotor1, valuePWM2);
-    analogWrite(PWMmotor2, valuePWM2);
-  } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Derecha
     if (orientacion == 1) {
       digitalWrite(Motor11, LOW);
@@ -129,6 +113,22 @@ bool desplazarse(int orientacion) {
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, HIGH);
+    }
+
+    analogWrite(PWMmotor1, valuePWM2);
+    analogWrite(PWMmotor2, valuePWM2);
+  } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
+    // Izquierda
+    if (orientacion == 1) {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, HIGH);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, LOW);
     }
 
     analogWrite(PWMmotor1, valuePWM2);
