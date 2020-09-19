@@ -15,6 +15,11 @@ const int FRONT2PIN = A2; // Izquierda
 const int FRONT1PIN = A3; // Derecha
 const int BACK1PIN = A4; // Izquierda
 const int BACK2PIN = A5; // Derecha
+
+const int frontLeftLimit = 300;
+const int frontRightLimit = 330;
+const int backLeftLimit = 450;
+const int backRightLimit = 430;
 // Pines de motores
 #define Motor11 7
 #define Motor12 6
@@ -242,20 +247,24 @@ float obtenerPeso() {
 bool desplazarse(int orientacion) {
   int LEFT_SENSOR = 0;
   int RIGHT_SENSOR = 0;
+  int LEFT_LIMIT = 0;
+  int RIGHT_LIMIT = 0;
 
   if (orientacion == 1) {
     LEFT_SENSOR = analogRead(FRONT2PIN);
     RIGHT_SENSOR = analogRead(FRONT1PIN);
+    LEFT_LIMIT = frontLeftLimit;
+    RIGHT_LIMIT = frontRightLimit;
   } else {
     LEFT_SENSOR = analogRead(BACK1PIN);
     RIGHT_SENSOR = analogRead(BACK2PIN);
+    LEFT_LIMIT = backLeftLimit;
+    RIGHT_LIMIT = backRightLimit;
   }
 
   bool detenerse = false;
 
-  int base_limit = 90;
-
-  if (RIGHT_SENSOR < base_limit && LEFT_SENSOR < base_limit) {
+  if (RIGHT_SENSOR < LEFT_LIMIT && LEFT_SENSOR < RIGHT_LIMIT) {
     // Adelante
     if (orientacion == 1) {
       digitalWrite(Motor11, HIGH);
@@ -270,7 +279,7 @@ bool desplazarse(int orientacion) {
     }
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);
-  } else if (RIGHT_SENSOR > base_limit && LEFT_SENSOR < base_limit) {
+  } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR < LEFT_LIMIT) {
     // Izquierda
     if (orientacion == 1) {
       digitalWrite(Motor11, LOW);
@@ -286,7 +295,7 @@ bool desplazarse(int orientacion) {
 
     analogWrite(PWMmotor1, valuePWM2);
     analogWrite(PWMmotor2, valuePWM2);
-  } else if (RIGHT_SENSOR < base_limit && LEFT_SENSOR > base_limit) {
+  } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Derecha
     if (orientacion == 1) {
       digitalWrite(Motor11, LOW);
@@ -302,7 +311,7 @@ bool desplazarse(int orientacion) {
 
     analogWrite(PWMmotor1, valuePWM2);
     analogWrite(PWMmotor2, valuePWM2);
-  } else if (RIGHT_SENSOR > base_limit && LEFT_SENSOR > base_limit) {
+  } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Detenerse
     detenerse = true;
     digitalWrite(Motor11, LOW);

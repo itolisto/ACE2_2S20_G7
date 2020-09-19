@@ -16,12 +16,9 @@ void setup() {
 void loop() {
   int FLEFT_SENSOR = analogRead(FRONT2PIN);
   int FRIGHT_SENSOR = analogRead(FRONT1PIN);
-  
+
   int BLEFT_SENSOR = analogRead(BACK1PIN);
   int BRIGHT_SENSOR = analogRead(BACK2PIN);
 
-//  Serial.println("Front L:" + String(FLEFT_SENSOR) + String(", R") + String(FRIGHT_SENSOR));
-//  Serial.println("Back L:" + String(BLEFT_SENSOR) + String(", R") + String(BRIGHT_SENSOR));
-
-  Serial.println("Front Left:" + String(FLEFT_SENSOR));
+  Serial.println(String(FLEFT_SENSOR) + String(",") + String(FRIGHT_SENSOR) + String("--") + String(BLEFT_SENSOR) + String(",") + String(BRIGHT_SENSOR));
 }
