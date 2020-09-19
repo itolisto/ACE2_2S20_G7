@@ -4,10 +4,10 @@ const int FRONT1PIN = A3; // Derecha
 const int BACK1PIN = A4; // Izquierda
 const int BACK2PIN = A5; // Derecha
 
-const int frontLeftLimit = 300;
-const int frontRightLimit = 330;
+const int frontLeftLimit = 500;
+const int frontRightLimit = 450;
 const int backLeftLimit = 450;
-const int backRightLimit = 430;
+const int backRightLimit = 410;
 // Pines de motores
 #define Motor11 7
 #define Motor12 6
@@ -45,14 +45,14 @@ void loop() {
     delay(10000);
     return;
   }
-  
+
   if (orientacion == 1) {
     // Desplazarse
     bool detenerse = desplazarse(orientacion);
     // Si se activa detener, cambiar orientacion
-    if (detenerse) {
-      orientacion = 2;
-    }
+    //    if (detenerse) {
+    //      orientacion = 2;
+    //    }
   } else {
     // Desplazarse
     bool detenerse = desplazarse(orientacion);
@@ -82,20 +82,22 @@ bool desplazarse(int orientacion) {
     RIGHT_LIMIT = backRightLimit;
   }
 
+  Serial.println(String(LEFT_SENSOR) + String(",") + String(RIGHT_SENSOR));
+
   bool detenerse = false;
 
   if (RIGHT_SENSOR < LEFT_LIMIT && LEFT_SENSOR < RIGHT_LIMIT) {
     // Adelante
     if (orientacion == 1) {
-      digitalWrite(Motor11, HIGH);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
-    } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, HIGH);
       digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
     }
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);

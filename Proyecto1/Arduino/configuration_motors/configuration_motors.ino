@@ -26,30 +26,30 @@ void loop() {
 void desplazarse(int orientacion) {
   bool detenerse = false;
 
-  // adelante
-  //    digitalWrite(Motor11, HIGH);
-  //    digitalWrite(Motor12, LOW);
-  //    digitalWrite(Motor21, LOW);
-  //    digitalWrite(Motor22, HIGH);
-
-  // atras
+  //   adelante
   //  digitalWrite(Motor11, LOW);
   //  digitalWrite(Motor12, HIGH);
   //  digitalWrite(Motor21, HIGH);
   //  digitalWrite(Motor22, LOW);
 
+  // atras
+  //  digitalWrite(Motor11, HIGH);
+  //  digitalWrite(Motor12, LOW);
+  //  digitalWrite(Motor21, LOW);
+  //  digitalWrite(Motor22, HIGH);
+
 
   // Izquierda adelante
-  //      digitalWrite(Motor11, LOW);
-  //      digitalWrite(Motor12, LOW);
-  //      digitalWrite(Motor21, HIGH);
-  //      digitalWrite(Motor22, LOW);
+  //  digitalWrite(Motor11, LOW);
+  //  digitalWrite(Motor12, LOW);
+  //  digitalWrite(Motor21, HIGH);
+  //  digitalWrite(Motor22, LOW);
 
   // Izquierda atras
-//  digitalWrite(Motor11, HIGH);
-//  digitalWrite(Motor12, LOW);
-//  digitalWrite(Motor21, LOW);
-//  digitalWrite(Motor22, LOW);
+  //  digitalWrite(Motor11, HIGH);
+  //  digitalWrite(Motor12, LOW);
+  //  digitalWrite(Motor21, LOW);
+  //  digitalWrite(Motor22, LOW);
 
 
 
@@ -60,19 +60,19 @@ void desplazarse(int orientacion) {
   //  digitalWrite(Motor22, LOW);
 
   // Derecha atras
-//  digitalWrite(Motor11, LOW);
-//  digitalWrite(Motor12, LOW);
-//  digitalWrite(Motor21, LOW);
-//  digitalWrite(Motor22, HIGH);
+  //  digitalWrite(Motor11, LOW);
+  //  digitalWrite(Motor12, LOW);
+  //  digitalWrite(Motor21, LOW);
+  //  digitalWrite(Motor22, HIGH);
 
 
 
 
   // Detenerse
-  //      digitalWrite(Motor11, LOW);
-  //      digitalWrite(Motor12, LOW);
-  //      digitalWrite(Motor21, LOW);
-  //      digitalWrite(Motor22, LOW);
+  digitalWrite(Motor11, LOW);
+  digitalWrite(Motor12, LOW);
+  digitalWrite(Motor21, LOW);
+  digitalWrite(Motor22, LOW);
 
   delay(500);
 

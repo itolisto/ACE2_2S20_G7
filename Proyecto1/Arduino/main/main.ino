@@ -267,15 +267,15 @@ bool desplazarse(int orientacion) {
   if (RIGHT_SENSOR < LEFT_LIMIT && LEFT_SENSOR < RIGHT_LIMIT) {
     // Adelante
     if (orientacion == 1) {
-      digitalWrite(Motor11, HIGH);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
-    } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, HIGH);
       digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
     }
     analogWrite(PWMmotor1, valuePWM1);
     analogWrite(PWMmotor2, valuePWM1);
