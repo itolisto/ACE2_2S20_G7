@@ -3,6 +3,13 @@ var router = express.Router();
 const axios = require('axios');
 const viaje = require('../../rest-api-loopback/server/models/viaje');
 var moment = require('moment');
+//FCM
+var admin = require('firebase-admin');
+var serviceAccount = require("./tokenfirebase.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://proyecto1-e5661.firebaseio.com"
+});
 
 router.post('/envio/salida', function(req, res, next) {
     // console.log(JSON.stringify(req.body));
@@ -11,6 +18,32 @@ router.post('/envio/salida', function(req, res, next) {
         viajeData['pesosalida'] = req.body.peso;
         viajeData['horasalida']=  new Date().toISOString();
         viajeData['estadoviaje']='progreso';
+
+
+        console.log('antes de enviar mensaje');
+       
+        console.log('un poco antes');
+ 
+        var topic = 'grupoVehiculo';
+        var message = {
+            data: {
+                title: 'Hola Mundo',
+                 body: 'Hola Body'
+            },
+            topic: topic
+        };
+    
+        admin.messaging().send(message)
+        .then((response) => {
+            // Response is a message ID string.
+            console.log('Successfully sent message:', response);
+        })
+        .catch((error) => {
+            console.log('Error sending message:', error);
+        });
+
+ 
+
     axios({
         method: 'post',
         url: process.env.URL + '/api/viajes',
