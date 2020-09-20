@@ -56,7 +56,7 @@
 %TEXTO_SUBRAYADO -> \underline{<texto>}
 
 %TITTULO DEL ARTICULO
-\title{\Huge IoT Proyecto Uno -  Robot Inteligente Transportador de Paquetes  - Arquitectura de Computadores y Ensambladores 2 }
+\title{\Huge IoT Proyecto Uno -  Vehículo Inteligente Transportador de Paquetes  - Arquitectura de Computadores y Ensambladores 2 }
 %AUTORES DEL ARTICULO
 
 \author{\newline Airton Yelstin de León Obando (201602836) - Rol: Analítico}
@@ -72,95 +72,123 @@
 \author{\newline Josue Eduardo Abelarde Perez, (201602890) Rol: Smart-APP}%
 \affiliation{Grupo No.7 - Universidad de San Carlos de Guatemala, Escuela de Ciencias y Sistemas
 }%
-\date{Agosto 2020}
+\date{Septiembre 2020}
 
 
 
 %INICIO DE DOCUMENTO<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 \begin{abstract}
 \title {resumen}
-En este proyecto se pretende hacer uso del concepto de IoT aplicado a un robot transportador de paquetes. El robot se diseñó de tal forma que pueda moverse a través de una ruta, lo anterior haciendo uso de diversos sensores digitales, dispositivos electrónicos y mecánicos para recolectar y procesar la información obtenida por el robot en la nube para que se mueva entre el punto de partida y su destino controlando sus movimiento y proveer información útil para el usuario final.
+En este proyecto se pretende hacer uso del concepto de IoT aplicado a un buzón inteligente junto con un vehículo transportador de paquetes. El vehículo se diseñó de tal forma que cuando se detecte un nuevo paquete pueda moverse a través de una ruta y entregar dicho paquete a su destino, lo anterior haciendo uso de diversos sensores digitales, dispositivos electrónicos y mecánicos a su vez recolectando y procesando la información obtenida por el vehículo en la nube para que se mueva entre el punto de partida y su destino controlando sus movimiento y funciones proveyendo información útil para el usuario final.
 \end{abstract}
 \maketitle{}
 \section{INTRODUCCIÓN}
-Al hablar de introducir el concepto de IoT es este proyecto principalmente se habla de la importancia de recolectar datos y hacer uso de estos datos provenientes de cualquier objeto de la vida diaria cuya utilidad aumenta significativamente al convertir estos datos en información relevante y de interés en su funcionamiento, de tal manera que este objeto expande sus funciones para las que fue originalmente creado. Este buzón inteligente fue diseñado para proveer una solución a los problemas de sanidad e higiene ante los acontecimientos de la pandemia del nuevo virus SARS-COVID19.
+Al hablar de introducir el concepto de IoT es este proyecto principalmente se habla de la importancia de recolectar datos y hacer uso de estos datos provenientes de cualquier objeto de la vida diaria cuya utilidad aumenta significativamente al convertir estos datos en información relevante y de interés en su funcionamiento, de tal manera que este objeto expande las funciones para las que fue originalmente creado. Ahora que se cuenta con un buzón inteligente para desinfectar paquetes se considera la implementación de un vehículo transportador inteligente capaz de medir su peso y transportar los paquetes desde el buzón del usuario, su punto de partida, hasta la puerta del usuario, su destino. El vehículo es capaz de seguir una linea coloreada que marca la ruta de su recorrido, además como parte de sus funciones este puede detectar obstáculos en su trayectoria y detener la marcha hasta que este obstáculo sea removido, una vez ha llegado a su destino el vehículo envía los datos a la nube, los almacena en una base de datos y una aplicación para dispositivos móviles advierte al usuario de su llegada así como otros datos importantes, tales como: la hora de partida desde el buzón y su hora de entrega junto con el peso del paquete recibido. Una vez entregado el paquete el vehículo procede a regresar al buzón en reversa y colocarse en el punto de espera hasta recibir un nuevo paquete. Por último el usuario es capaz de hacer que el vehículo transportador entre en estado activo o inactivo. Entre la información de relevancia para el usuario se tiene un historial de:
+\begin{itemize}
+    \item[$\bullet$]\textbf{Ubicación del vehículo.}
+    \item[$\bullet$]\textbf{Estado del vehículo.}
+    \item[$\bullet$]\textbf{Cantidad de paquetes entregados.}
+    \item[$\bullet$]\textbf{Total de obstáculos detectados.}
+    \item[$\bullet$]\textbf{Peso promedio de los paquetes entregados.}
+    \item[$\bullet$]\textbf{Tiempo promedio que ha tardado en llegar el vehículo desde el buzón hasta el punto de entrega.}
+    \item[$\bullet$]\textbf{Tiempo promedio que ha tardado en llegar el vehículo desde el punto de entrega de regreso hasta el buzón.}
+    
+\end{itemize}
+
+Todos puntos listados anteriormente pueden ser vistos desde la pantalla principal de \textbf{'Dash Board'} de la aplicación para dispositivos móviles inteligentes, estos serán actualizados al momento que se llevan a cabo las tareas, o sea en tiempo real, permitiendo al usuario saber cual es el estado del vehículo en todo el momento y lugar que desee.
 
 \section{Prototipo de Diseño}
-Considerando que el propósito de este objeto es para introducir paquetes y resguardarlos se presentan los prototipos de diseño utilizados para la realización del buzón inteligente, observar Figura 1.
+Ya que el objetivo de este vehículo es transportar los paquetes recibidos desde el buzón inteligente hasta su destino se ha optado por un diseño que cuenta con cuatro ruedas para un movimiento eficaz a través de la ruta que deberá seguir, además considerando la variedad de tipos de objetos que transportará se tiene una carcasa solida prefabricada como chasis donde se colocaran los demás componentes electrónicos, mecánicos y sensores, \textbf{véase figura 1}.
 
 
 \begin{figure} [H] \centering 
 \caption{Boceto de diseño}
+%IMAGENS DE CHASIS
+\includegraphics[width=0.5\textwidth]{chasis.jpg} 
+Esta estructura está hecha de un material sintético con tal de que este sea mas ligero.
+\end{figure}
 
-\includegraphics[width=0.5\textwidth]{Boceto.png} 
-Las dimensiones son de L = 30 cm de alto, ancho y largo con una puertecilla móvil para introducir los paquetes.
+
+La estructura es importante al momento de colocar los demás componentes, en la \textbf{figura 2} se puede apreciar el conjunto de componentes principales que conforman al vehículo.
+
+\begin{figure} [H] \centering 
+\caption{Componentes Pricipales de vehículo}
+%IMAGEN DE COMPONENTES DE VEHICULO
+\includegraphics[width=0.5\textwidth]{componentes.jpg}
+\end{figure}
+
+Por ultimo se puede observar en la \textbf{figura 3} una vista de estos componentes principales ensamblados que finalmente se ven para que le vehículo este en condición de realizar sus labores.
+
+\begin{figure} [H] \centering 
+\caption{Vehículo Armado}
+%IMAGEN DE COMPONENTES PRINCIPALES MONTADOS
+\includegraphics[width=0.5\textwidth]{armazon.jpg} 
+Armazón, motores y ruedas ensambladas.
 \end{figure}
 
 \section{Famework de Productos Inteligentes Conectados}
 \subsection{Infraestructura del Producto}
 \subsubsection{Hardware:}
 \begin{itemize}
-    \item[$\bullet$]\textbf{Armazón} para robot transportador.
-    \item[$\bullet$]\textbf{Cuatro motores DC} para que el robot pueda moverse.
+    \item[$\bullet$]\textbf{Armazón prefabricada} de para chasis vehículo transportador.
+    \item[$\bullet$]Módulo de balanza HX711
+    \item[$\bullet$]1 Batería de 9V.
+    \item[$\bullet$]1 Broche para batería de 9V con plug DC
+    \item[$\bullet$]\textbf{Cuatro moto-reductores con motores DC} para producir movimiento del vehículo.
+    \item[$\bullet$]\textbf{Cuatro Ruedas Plásticas} para hacer posible el movimiento de vehículo.
+    \item[$\bullet$]\textbf{Tornillos y tuercas M3} para ensamblar la armazón del vehículo.
+    \item[$\bullet$]\textbf{4 Baterías AA de 1.5V} como fuente de energía para vehículo.
+    \item[$\bullet$]\textbf{Caja plástica} contenedora para baterías de alimentación.
     \item[$\bullet$]Dispositivo de \textbf{Módulo WiFi}.
-    \item[$\bullet$]\textbf{Arduino.}
+    \item[$\bullet$]\textbf{Arduino Uno.}
     \item[$\bullet$]\textbf{Cables} para conexiones.
     \item[$\bullet$]\textbf{Cautín} para realizar soldaduras.
     \item[$\bullet$]\textbf{Estaño.}
-    \item[$\bullet$]\textbf{Protoboard} para armar circuitos digitales.
-    \item[$\bullet$]\textbf{Plataforma} para colocar los paquetes que el robot debe transportar.
-    \item[$\bullet$]\textbf{Recipiente contenedor} de desinfectante, este contenedor es de plástico.
+    \item[$\bullet$]\textbf{1 Mini protoboard de 170 puntos} para armar circuitos digitales.
+    \item[$\bullet$]\textbf{Plataforma} para colocar los paquetes que el vehículo debe transportar.
+    \item[$\bullet$]\textbf{Módulo Puente H L298 }para control de Motores DC.
+
 \end{itemize}
 \subsubsection{Software}
-    Se han diseñado y programado los algoritmos para la recolección de datos sobre el estado del buzón en el microcontrolador ARDUINO para su posterior trasmisión a la nube.
+    Se han diseñado y programado los algoritmos necesarios para la recolección de datos de interés sobre el estado del vehículo inteligente, los paquetes que transporta, las tareas que este realiza a través de cada uno de los sensores integrados, además se incluyen las funciones de control del vehículo sobre las que el usuario tiene acceso desde su dispositivo móvil por medio de el microcontrolador ARDUINO para su posterior trasmisión y procesamiento en la nube. Todo ello usando el lenguaje de programación C++, usado por estos microcontroladores.
     
 \subsection{Sensores}
 \begin{itemize}
     \item[$\bullet$]\textbf{Sensor de peso} para determinar la presencia de nuevos paquetes.
-    \item[$\bullet$]\textbf{Sensor ultrasónico HC-SR04} para saber cuando se encuentra un nuevo obstáculo.
+    \item[$\bullet$]\textbf{2 Sensores ultrasónicos HC-SR04} para saber cuando se encuentra un nuevo obstáculo.
+    \item[$\bullet$]4 Sensores de Línea Perpendicular TCRT5000.
 \end{itemize}
 \subsection{Conexión}
-    La comunicación a utilizar entre el buzón inteligente y el usuario será a través de conexión \textbf{WiFi}. El dispositivo arduino recolecta la información para ser transmitida desde el módulo \textbf{WiFi} realizando peticiones \textbf{HTTP} con el servidor a través de una \textbf{API/REST} que se encargará de transmitir la información al dispositivo móvil del usuario. Ver figura 2. \newline
+    La comunicación utilizada entre el vehículo inteligente y el usuario final es a través de una conexión inalámbrica \textbf{WiFi}. El dispositivo arduino recolecta la información pertinente para ser codificada y transmitida desde el vehículo a través del módulo \textbf{WiFi} realizando peticiones \textbf{HTTP} con el servidor a través de una \textbf{API/REST} que se encargará de almacenar, procesar y transmitir la información codificada al dispositivo móvil del usuario desde la base de datos en la nube. Ver figura 4. \newline
 \begin{figure} [H] \centering 
 \caption{Representación de conexión}
-
-\includegraphics[width=0.5\textwidth]{conection.png} 
+\includegraphics[width=0.5\textwidth]{conexion.png} 
+La comunicación entre el vehículo inteligente, el servidor y el usuario será bidireccional, ya que el usuario es capaz de realizar acciones sobre el vehículo.
 \end{figure}
 \subsection{Análisis}
-    Para este proyecto solamente se requiere que el buzón desinfecte los paquetes entregados una vez están dentro del compartimiento del buzón, además este producto de IoT debe informar al usuario sobre nuevos paquetes, estado de las puertas del buzón y nivel de líquido desinfectante y por lo tanto \textbf{no es necesario aplicar análisis en este proyecto.}
+    En este proyecto de IoT el vehículo transportador recolecta información constantemente sobre su estado y el de los paquetes que este recolecta, además el usuario tiene la capacidad de ver esta información desde su dispositivo, pero la información se procesa para que le sea útil al usuario, en este caso en análisis se hace en la característica de visualizar promedios de peso de los paquetes, tiempos de entrega y el conteo del total de paquetes entregados exitosamente. Además, la capacidad de hacer que el vehículo entre en modo de inactividad pues se debe procesar y decodificar la información enviada a través del dispositivo hasta el vehículo.
 \subsection{Smart APP}
-    Ya que el usuario deberá tener acceso al estado de su buzón inteligente en todo momento se ha de ha desarrollado una aplicación inteligente para dispositivos móviles. Esta aplicación es compatible con dispositivos que utilizan el Sistema Operativo \textbf{Android}, a continuación se pueden apreciar las pantallas que muestran su funcionamiento:
+    Como se menciono en varias ocasiones el usuario puede conectarse al vehículo inteligente a través de su dispositivo móvil, esta aplicación esta dirigida a dispositivos móviles que usan el sistema operativo \textbf{Android}, esta aplicación móvil cuenta con varias características, pero la principal es su DashBoard donde se pueden visualizar varios datos de interés para el usuario, a continuación se muestran y detallas las funciones de la aplicación.
     
 \begin{figure} [H] \centering 
-\caption{PANTALLA 1 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{img4.jpeg} 
+\caption{PANTALLA 1 ( Dash Board en Aplicación móvil )}
+\includegraphics[width=0.4\textwidth]{img1.jpeg} 
+\\
+Este es el aspecto del la pantalla principal del Dash Board en la aplicación móvil. Cada uno de los valores presentados: Estado, Ubicación, Tiempo Promedio, Tiempo Promedio ida, Tiempo Promedio Regreso, Total contador y Total obstáculos se actualiza cada vez que el vehículo recibe alguna paquete y realiza su entrega.
+Para que los cambios sean visibles se debe Presionar el botón \textbf{Actualizar}.\\
+Si se desea hacer que el vehículo entre en estado activo o inactivo se deberá presionar los botones \textbf{Activar} o \textbf{Desactivar}, respectivamente.
 \end{figure}
 \\
-Cuando el buzón ha detectado un nuevo paquete en el compartimiento la aplicación muestra una advertencia al usuario sobre ello. Al seleccionar vera más información sobre ello.
 
 \begin{figure} [H] \centering 
-\caption{PANTALLA 2 ( Aplicación móvil )}
+\caption{PANTALLA 2 ( Notificaciones de Aplicación Móvil )}
 \includegraphics[width=0.4\textwidth]{img2.jpeg} 
-\end{figure}
 \\
-Una vez el buzón inteligente ha reconocido que se ha introducido un nuevo paquete la aplicación actualizara su estatus en la pantalla principal indicando la información de interés. Si hay un objeto mostrará un número uno de lo contrarios un número cero, además el peso del objeto y si se desea ver más solo debe presionar el botón \textbf{Get Data}.
-
-\begin{figure} [H] \centering 
-\caption{PANTALLA 3 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{img3.jpeg} 
+Cada vez que el vehículo detecte que un nuevo paquete ha sido recibido el vehículo procede a enviar una notificación emergente en el dispositivo del usuario, para advertirle que la entrega del paquete a su destino esta en proceso.
 \end{figure}
-\\
-Una vez se ha presionado el botón \textbf{Get Data}  el usuario puede ver la información detallada junto con el nivel de liquido desinfectante.
-
 \section{Vídeos de funcionamiento}
 \begin{itemize}
-    \item[$\bullet$]Video1: https://youtu.be/1RXLjeAWD9k 
-    \item[$\bullet$]Video2: https://youtu.be/fiz1PkFIdJ8
-    \item[$\bullet$]Video3: https://youtu.be/uYKBNuGgTSc
+    \item[$\bullet$]Video1: https://youtu.be/-WbvX138Zik
 \end{itemize}
-
-
-
-
 
 \end{document}
