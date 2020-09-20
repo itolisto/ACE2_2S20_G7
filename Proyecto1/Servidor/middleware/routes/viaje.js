@@ -12,150 +12,110 @@ admin.initializeApp({
 });
 
 router.post('/envio/salida', function(req, res, next) {
-    // console.log(JSON.stringify(req.body));
+    const viajeData = {
+        pesosalida: req.body.peso,
+        horasalida: new Date().toISOString(),
+        estadoviaje: 'progreso'
+    };
 
-        let viajeData = {};
-        viajeData['pesosalida'] = req.body.peso;
-        viajeData['horasalida']=  new Date().toISOString();
-        viajeData['estadoviaje']='progreso';
+    const message = {
+        data: {
+            title: 'Hola Mundo',
+            body: 'Hola Body'
+        },
+        topic: 'grupoVehiculo'
+    };
 
-
-        console.log('antes de enviar mensaje');
-       
-        console.log('un poco antes');
- 
-        var topic = 'grupoVehiculo';
-        var message = {
-            data: {
-                title: 'Hola Mundo',
-                 body: 'Hola Body'
-            },
-            topic: topic
-        };
-    
-        admin.messaging().send(message)
-        .then((response) => {
-            // Response is a message ID string.
-            console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-            console.log('Error sending message:', error);
+    admin.messaging().send(message)
+    .then((response) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response);
+        
+        return axios({
+            method: 'post',
+            url: process.env.URL + '/api/viajes',
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            data: viajeData
         });
-
- 
-
-    axios({
-        method: 'post',
-        url: process.env.URL + '/api/viajes',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        data: viajeData
-    })
-    .then(function (response) {
-   
-        let dataEstadista= {};
-        dataEstadista['idviaje']=response['data']['id'];
-        axios({ 
+    }).then((response) => {
+        const dataEstadista = {
+            idviaje: response['data']['id']
+        };
+        
+        return axios({ 
             method:'post',
             url:process.env.URL+'/api/estadisticas',
             headers:{'Content-Type': 'application/json', 'Accept': 'application/json'},
             data:dataEstadista
-        })
-        .then(function(response){
-                //debo a?adir un detalle viaje que va camino al cliente.
-            res.status(200).json({ result: 'success' });
-        })
-        .catch(function(error){
-            next(error);
         });
-
-         
-    })
-    .catch(function (error) {
-        console.log(viajeData);
- 
-        next(error);
+    }).then(() => {
+        res.status(200).json({ result: 'success' });
+    }).catch((error) => {
+        console.log('Error:', error);
     });
-
 });
 
 router.post('/envio/entrega', function(req, res, next) {
-    let viajeData = {};
-        viajeData['pesoentrega'] = req.body.peso;
-        viajeData['obstaculoentrega'] = req.body.obstaculos;
-        viajeData['horaentrega']= new Date().toISOString();
+    let viajeData = {
+        pesoentrega: req.body.peso,
+        obstaculoentrega: req.body.obstaculos,
+        horaentrega: new Date().toISOString()
+    };
 
-      //  viajeData['horaentrega']='now';
-        const selectFilter = {"fields": {"id": true,"horasalida":true},"order": "timestamp DESC","limit":1};
-        const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
-        axios({
-            method: 'get',
-            url: url,
-            headers: {'Accept': 'application/json'},
-        })
-        .then(function (response) {
-            // handle success
-            let id = response.data[0]['id'];
-      
-            const  horasalida = moment(response.data[0]['horasalida']);
-            const horaentrega = moment(viajeData['horaentrega']);
-            const tiempoProm = horaentrega-horasalida;
-   
+    let tiempoProm;
 
-            
-             //res.status(200).json(response.data[0]);
+    const selectFilter = {"fields": {"id": true,"horasalida":true},"order": "timestamp DESC","limit":1};
+    const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
 
-             axios({
-                method: 'patch',
-                url: process.env.URL + '/api/viajes/'+id,
-                headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-                data:viajeData
-            }).then(function(response){
-                    /**
-                        * dentro del patch para estadistica se debe enviar pesopromedio,tiempopromedioida
-                    */
-                   const selectFilter4 = {"fields": {"id": true},"order": "timestamp DESC","limit":1};
-                   const url4 = process.env.URL + '/api/estadisticas?filter=' + encodeURIComponent(JSON.stringify(selectFilter4));
-                   axios({
-                        method: 'get',
-                        url: url4,
-                        headers: {'Accept': 'application/json'},
-                    }).then(function(response4){
+    axios({
+        method: 'get',
+        url: url,
+        headers: {'Accept': 'application/json'},
+    }).then(function (response) {
+        // handle success
+        let id = response.data[0]['id'];
+    
+        const horasalida = moment(response.data[0]['horasalida']);
+        const horaentrega = moment(viajeData['horaentrega']);
+        tiempoProm = horaentrega-horasalida;
 
-                        let idest = response4.data[0]['id'];
-                        let dataEstadistico={}
-                        
-                        dataEstadistico['pesopromedio']=viajeData['pesoentrega'];
-                        dataEstadistico ['tiempopromedioida']  =tiempoProm;                     
-
-                        
-                        axios({
-                            method: 'patch',
-                            url: process.env.URL + '/api/estadisticas/'+idest,
-                            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-                            data:dataEstadistico
-                        }).then(function(response5){
-
-  
-                                 res.status(200).json({ result: 'success' });
-
-                        }).catch(function(error){
-                            next(error);
-                        });
-
-
-                    }).catch(function(error){
-                        next(error);
-                    })
-
-
-            }).catch(function (error){
-                next(error);
-            });
-       
-        }).catch(function (error) {
-
-            next(error);
+        return axios({
+            method: 'patch',
+            url: process.env.URL + '/api/viajes/' + id,
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            data:viajeData
         });
+    }).then(function() {
+        /**
+         * Dentro del patch para estadistica se debe enviar pesopromedio,tiempopromedioida
+         */
+        const selectFilter4 = {"fields": {"id": true},"order": "timestamp DESC","limit":1};
+        const url4 = process.env.URL + '/api/estadisticas?filter=' + encodeURIComponent(JSON.stringify(selectFilter4));
+
+        return axios({
+            method: 'get',
+            url: url4,
+            headers: {'Accept': 'application/json'}
+        });
+    }).then(function(response4) {
+        let idest = response4.data[0]['id'];
+        
+        let dataEstadistico = {
+            pesopromedio: viajeData['pesoentrega'],
+            tiempopromedioida: tiempoProm
+        };
+        
+        return axios({
+            method: 'patch',
+            url: process.env.URL + '/api/estadisticas/' + idest,
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            data: dataEstadistico
+        });
+    }).then(function() {
+        res.status(200).json({ result: 'success' });
+    }).catch(function (error) {
+        console.log('Error:', error);
+    });
 });
 
 
