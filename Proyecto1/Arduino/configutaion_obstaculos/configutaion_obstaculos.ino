@@ -1,5 +1,3 @@
-#include <HX711.h>
-
 // Pines de sensor HC-SR04
 const int TRIG1PIN = 2;
 const int ECHO1PIN = 3;

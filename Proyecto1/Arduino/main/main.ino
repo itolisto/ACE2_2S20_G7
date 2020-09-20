@@ -25,8 +25,6 @@ const int backRightLimit = 400;
 #define Motor12 6
 #define Motor21 8
 #define Motor22 9
-#define PWMmotor1 5
-#define PWMmotor2 10
 int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
 int valuePWM2 = 110; // Velocidad de motores cuando giran
 // Variables de configuración
@@ -58,8 +56,6 @@ void setup() {
   pinMode(Motor12, OUTPUT);
   pinMode(Motor21, OUTPUT);
   pinMode(Motor22, OUTPUT);
-  pinMode(PWMmotor1, OUTPUT);
-  pinMode(PWMmotor2, OUTPUT);
   // Configurar sensor de peso
   balanza.begin(DOUTPIN, CLKPIN);
   balanza.set_scale(); // La escala por defecto es 1
@@ -109,8 +105,9 @@ void loop() {
 
   // 3. Verificar si hay algun obstaculo que impida el movimiento del carro
   float distanciaAObstaculo = distanciaObstaculo(orientacion);
+  // Serial.println("Obstaculo: " + String(distanciaAObstaculo, 2));
 
-  if (distanciaAObstaculo < 15) {
+  if (distanciaAObstaculo < 7) {
     // Actualizar solamente si hubo un cambio de estado
     if (obstaculo_detectado == false) {
       // Forzar los motores a parar
@@ -118,8 +115,6 @@ void loop() {
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, LOW);
-      analogWrite(PWMmotor1, 0);
-      analogWrite(PWMmotor2, 0);
       // Subir contador
       sumarObstaculos(orientacion);
       // Actualizar estado
@@ -131,6 +126,12 @@ void loop() {
     delay(1000);
     return;
   } else if (obstaculo_detectado) {
+    // Publicar nuevo estado
+    if (orientacion == 1) {
+      publicarEnConsola("#update#ida#");
+    } else {
+      publicarEnConsola("#update#retorno#");
+    }
     // Actualizar estado solamente si el anterior era verdadero
     obstaculo_detectado = false;
   }
@@ -145,6 +146,7 @@ void loop() {
 
     if (yaSeMovio == false) {
       peso_actual = obtenerPeso();
+      // Serial.println("Peso actual: " + String(peso_actual, 2));
       if (peso_actual > 20) {
         // Enviar notificacion
         publicarEnConsola("#salida#" + String(peso_actual, 1) + String("#"));
@@ -155,8 +157,6 @@ void loop() {
 
     if (mover || yaSeMovio) {
       yaSeMovio = true;
-      // Publicar nuevo estado
-      publicarEnConsola("#update#ida#");
       // Desplazarse
       bool detenerse = desplazarse(orientacion);
       // Si se activa detener, cambiar orientacion
@@ -170,6 +170,8 @@ void loop() {
     bool mover = false; // Variable temporal para detectar primer movimiento
 
     if (yaSeMovio == false) {
+      peso_actual = obtenerPeso();
+      // Serial.println("Peso actual: " + String(peso_actual, 2));
       if (obtenerPeso() < 20) {
         // Enviar notificacion
         publicarEnConsola("#entrega#" + String(peso_actual, 1) + String("#") + String(numero_obstaculos_ida) + String("#"));
@@ -180,8 +182,6 @@ void loop() {
 
     if (mover || yaSeMovio) {
       yaSeMovio = true;
-      // Publicar nuevo estado
-      publicarEnConsola("#update#retorno#");
       // Desplazarse
       bool detenerse = desplazarse(orientacion);
       // Si se activa detener, cambiar orientacion
@@ -277,8 +277,6 @@ bool desplazarse(int orientacion) {
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, HIGH);
     }
-    analogWrite(PWMmotor1, valuePWM1);
-    analogWrite(PWMmotor2, valuePWM1);
   } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR < LEFT_LIMIT) {
     // Derecha
     if (orientacion == 1) {
@@ -292,9 +290,6 @@ bool desplazarse(int orientacion) {
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, HIGH);
     }
-
-    analogWrite(PWMmotor1, valuePWM2);
-    analogWrite(PWMmotor2, valuePWM2);
   } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Izquierda
     if (orientacion == 1) {
@@ -308,9 +303,6 @@ bool desplazarse(int orientacion) {
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, LOW);
     }
-
-    analogWrite(PWMmotor1, valuePWM2);
-    analogWrite(PWMmotor2, valuePWM2);
   } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Detenerse
     detenerse = true;
@@ -318,8 +310,6 @@ bool desplazarse(int orientacion) {
     digitalWrite(Motor12, LOW);
     digitalWrite(Motor21, LOW);
     digitalWrite(Motor22, LOW);
-    analogWrite(PWMmotor1, 0);
-    analogWrite(PWMmotor2, 0);
   }
 
   return detenerse;
