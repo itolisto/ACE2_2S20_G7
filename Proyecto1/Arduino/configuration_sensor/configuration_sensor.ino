@@ -5,7 +5,7 @@ const int BACK1PIN = A4; // Izquierda
 const int BACK2PIN = A5; // Derecha
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // Configurar sensores de color
   pinMode(FRONT1PIN, INPUT); // Sensor frontal derecho
   pinMode(FRONT2PIN, INPUT); // Sensor frontal izquierdo
@@ -16,12 +16,9 @@ void setup() {
 void loop() {
   int FLEFT_SENSOR = analogRead(FRONT2PIN);
   int FRIGHT_SENSOR = analogRead(FRONT1PIN);
-  
+
   int BLEFT_SENSOR = analogRead(BACK1PIN);
   int BRIGHT_SENSOR = analogRead(BACK2PIN);
 
-  Serial.println("Front L:" + String(FLEFT_SENSOR) + String(", R") + String(FRIGHT_SENSOR));
-  Serial.println("Back L:" + String(BLEFT_SENSOR) + String(", R") + String(BRIGHT_SENSOR));
-
-  delay(3000);
+  Serial.println(String(FLEFT_SENSOR) + String(",") + String(FRIGHT_SENSOR) + String("--") + String(BLEFT_SENSOR) + String(",") + String(BRIGHT_SENSOR));
 }
