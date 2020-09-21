@@ -17,18 +17,17 @@ router.post('/envio/salida', function(req, res, next) {
         horasalida: new Date().toISOString(),
         estadoviaje: 'progreso'
     };
-
+    var horaparse = moment(viajeData['horasalida']);
     const message = {
-        data: {
-            title: 'Hola Mundo',
-            body: 'Hola Body'
+        notification: {
+            title: 'Buzon inteligente',
+            body: 'saliendo \npeso:'+viajeData['pesosalida']+' \nhora:'+horaparse.format('MMMM Do YYYY, h:mm:ss a')
         },
         topic: 'grupoVehiculo'
     };
 
     admin.messaging().send(message)
     .then((response) => {
-        // Response is a message ID string.
         console.log('Successfully sent message:', response);
         
         return axios({
@@ -63,14 +62,26 @@ router.post('/envio/entrega', function(req, res, next) {
     };
 
     let tiempoProm;
+    var horaparse = moment(viajeData['horaentrega']);
 
     const selectFilter = {"fields": {"id": true,"horasalida":true},"order": "timestamp DESC","limit":1};
     const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
-
-    axios({
+    
+    const message = {
+        notification: {
+            title: 'Buzon inteligente',
+            body: 'entrega \npeso:'+viajeData['pesoentrega']+' \nhora:'+horaparse.format('MMMM Do YYYY, h:mm:ss a')+'\nobstaculos:'+viajeData['obstaculoentrega']
+        },
+        topic: 'grupoVehiculo'
+    };
+    admin.messaging().send(message)
+    .then((response) => {
+        console.log('Successfully sent message:', response);
+    return axios({
         method: 'get',
         url: url,
         headers: {'Accept': 'application/json'},
+    });
     }).then(function (response) {
         // handle success
         let id = response.data[0]['id'];
@@ -86,9 +97,7 @@ router.post('/envio/entrega', function(req, res, next) {
             data:viajeData
         });
     }).then(function() {
-        /**
-         * Dentro del patch para estadistica se debe enviar pesopromedio,tiempopromedioida
-         */
+
         const selectFilter4 = {"fields": {"id": true},"order": "timestamp DESC","limit":1};
         const url4 = process.env.URL + '/api/estadisticas?filter=' + encodeURIComponent(JSON.stringify(selectFilter4));
 
@@ -120,83 +129,67 @@ router.post('/envio/entrega', function(req, res, next) {
 
 
 router.post('/envio/regreso', function(req, res, next) {
-        let viajeData = {};
-        viajeData['obstaculoregreso'] = req.body.obstaculos;
-        viajeData['horaregreso']= new Date().toISOString();
-        viajeData['estadoviaje']='finalizado';
-
-      //  viajeData['horaentrega']='now';
-        const selectFilter = {"fields": {"id": true,'horaentrega':true,'obstaculoentrega':true},"order": "timestamp DESC","limit":1};
-        const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
-        axios({
+    let viajeData = {
+        obstaculoregreso:req.body.obstaculos,
+        horaregreso:new Date().toISOString(),
+        estadoviaje:'finalizado'
+    };
+    const selectFilter = {"fields": {"id": true,'horaentrega':true,'obstaculoentrega':true},"order": "timestamp DESC","limit":1};
+    const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
+    var horaparse = moment(viajeData['horaregreso']);
+    const message = {
+        notification: {
+            title: 'Buzon inteligente',
+            body: 'regreso \nhora:'+horaparse.format('MMMM Do YYYY, h:mm:ss a')+'\nobstaculos:'+viajeData['obstaculoregreso']
+        },
+        topic: 'grupoVehiculo'
+    };
+    let dataEstadistico ={};
+    admin.messaging().send(message)
+    .then((response) => {
+        console.log('Successfully sent message:', response);
+        return axios({
             method: 'get',
             url: url,
             headers: {'Accept': 'application/json'},
-        })
-        .then(function (response) {
-            // handle success
-            let id = response.data[0]['id'];
-            let promedioRegreso = moment( viajeData['horaregreso'])-moment(response.data[0]['horaentrega']);
-            let totalObstaculos =viajeData['obstaculoregreso']+response.data[0]['obstaculoentrega'];
-
-           
-             //res.status(200).json(response.data[0]);
-
-             axios({
-                method: 'patch',
-                url: process.env.URL + '/api/viajes/'+id,
-                headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-                data:viajeData
-            }).then(function(response){
-
-                //res.status(200).json({ result: 'success' });
-                const selectFilter4 = {"fields": {"id": true},"order": "timestamp DESC","limit":1};
-                const url4 = process.env.URL + '/api/estadisticas?filter=' + encodeURIComponent(JSON.stringify(selectFilter4));
-                axios({
-                     method: 'get',
-                     url: url4,
-                     headers: {'Accept': 'application/json'},
-                 }).then(function(response4){
-
-                     let idest = response4.data[0]['id'];
-                     let dataEstadistico={}
-                     
-                     dataEstadistico['totalobstaculos']=totalObstaculos;
-                     dataEstadistico ['tiempopromedioregreso']  =promedioRegreso;                     
-
-                     
-                     axios({
-                         method: 'patch',
-                         url: process.env.URL + '/api/estadisticas/'+idest,
-                         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-                         data:dataEstadistico
-                     }).then(function(response5){
-
-                            console.log(dataEstadistico);
-                              res.status(200).json({ result: 'success' });
-
-                     }).catch(function(error){
-                         next(error);
-                     });
-
-
-                 }).catch(function(error){
-                     next(error);
-                 })
-
-            }).catch(function (error){
-                next(error);
-            });
-       
-        }).catch(function (error) {
-
-            next(error);
         });
+    }).then(function (response) {
+        dataEstadistico={
+            totalobstaculos:viajeData['obstaculoregreso']+response.data[0]['obstaculoentrega'],
+            tiempopromedioregreso: moment( viajeData['horaregreso'])-moment(response.data[0]['horaentrega'])
+        }
+        // handle success
+        return axios({
+            method: 'patch',
+            url: process.env.URL + '/api/viajes/'+response.data[0]['id'],
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            data:viajeData
+        });
+    }).then(function(){
+
+      
+        const selectFilter4 = {"fields": {"id": true},"order": "timestamp DESC","limit":1};
+        const url4 = process.env.URL + '/api/estadisticas?filter=' + encodeURIComponent(JSON.stringify(selectFilter4));
+
+
+        return axios({
+            method: 'get',
+            url: url4,
+            headers: {'Accept': 'application/json'},
+        });
+    }).then(function(response4){
+     
+    
+        return axios({
+            method: 'patch',
+            url: process.env.URL + '/api/estadisticas/'+ response4.data[0]['id'],
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            data:dataEstadistico
+        });              
+    }).then(function(){
+        res.status(200).json({ result: 'success' });
+    }).catch(function (error) {
+        next(error);
+    });
 });
-
-
-
-
-
-
 module.exports = router;

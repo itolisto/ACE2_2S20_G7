@@ -40,6 +40,11 @@
             "required":false
           
           },
+          "modo": {
+            "type": "string",
+            "required":false
+          
+          },
         "timestamp":{
           "type": "date",
           "defaultFn": "now",
