@@ -48,12 +48,16 @@ router.post('/vehiculo/modo', function(req, res, next) {
         let viajeData={
             modo:req.body.modo
         };
+        console.log(viajeData);
         return axios({
             method: 'patch',
             url: process.env.URL + '/api/viajes/'+response.data[0]['id'],
             headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
             data:viajeData
         });
+    }).then(function () {
+        console.log('exito');
+        res.status(200).json({ result: 'success' });
     }).catch(function (error) {
         next(error);
     }); ;
