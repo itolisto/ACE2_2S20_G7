@@ -21,10 +21,10 @@ const int frontRightLimit = 480;
 const int backLeftLimit = 400;
 const int backRightLimit = 400;
 // Pines de motores
-#define Motor11 7
-#define Motor12 6
-#define Motor21 8
-#define Motor22 9
+#define Motor11 8
+#define Motor12 9
+#define Motor21 10
+#define Motor22 11
 int valuePWM1 = 140; // Velocidad de motores cuando se mueven hacia el frente
 int valuePWM2 = 110; // Velocidad de motores cuando giran
 // Variables de configuración
@@ -105,7 +105,12 @@ void loop() {
 
   // 3. Verificar si hay algun obstaculo que impida el movimiento del carro
   float distanciaAObstaculo = distanciaObstaculo(orientacion);
-  // Serial.println("Obstaculo: " + String(distanciaAObstaculo, 2));
+
+  if (orientacion == 1) {
+    Serial.println("Obstaculo ida: " + String(distanciaAObstaculo, 2));
+  } else {
+    Serial.println("Obstaculo regreso: " + String(distanciaAObstaculo, 2));
+  }
 
   if (distanciaAObstaculo < 7) {
     // Actualizar solamente si hubo un cambio de estado
@@ -146,7 +151,7 @@ void loop() {
 
     if (yaSeMovio == false) {
       peso_actual = obtenerPeso();
-      // Serial.println("Peso actual: " + String(peso_actual, 2));
+      Serial.println("Peso ida: " + String(peso_actual, 2));
       if (peso_actual > 20) {
         // Enviar notificacion
         publicarEnConsola("#salida#" + String(peso_actual, 1) + String("#"));
@@ -171,8 +176,8 @@ void loop() {
 
     if (yaSeMovio == false) {
       peso_actual = obtenerPeso();
-      // Serial.println("Peso actual: " + String(peso_actual, 2));
-      if (obtenerPeso() < 20) {
+      Serial.println("Peso regreso: " + String(peso_actual, 2));
+      if (peso_actual < 20) {
         // Enviar notificacion
         publicarEnConsola("#entrega#" + String(peso_actual, 1) + String("#") + String(numero_obstaculos_ida) + String("#"));
         // Actualizar
@@ -267,13 +272,13 @@ bool desplazarse(int orientacion) {
   if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR < LEFT_LIMIT) {
     // Adelante
     if (orientacion == 1) {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor11, HIGH);
+      digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
     } else {
-      digitalWrite(Motor11, HIGH);
-      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
       digitalWrite(Motor21, LOW);
       digitalWrite(Motor22, HIGH);
     }
@@ -281,26 +286,26 @@ bool desplazarse(int orientacion) {
     // Derecha
     if (orientacion == 1) {
       digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, HIGH);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, LOW);
-    } else {
-      digitalWrite(Motor11, LOW);
-      digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, LOW);
-      digitalWrite(Motor22, HIGH);
-    }
-  } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
-    // Izquierda
-    if (orientacion == 1) {
-      digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
     } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, HIGH);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, LOW);
+    }
+  } else if (RIGHT_SENSOR < RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
+    // Izquierda
+    if (orientacion == 1) {
       digitalWrite(Motor11, HIGH);
       digitalWrite(Motor12, LOW);
       digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, LOW);
+    } else {
+      digitalWrite(Motor11, LOW);
+      digitalWrite(Motor12, LOW);
+      digitalWrite(Motor21, HIGH);
       digitalWrite(Motor22, LOW);
     }
   } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
