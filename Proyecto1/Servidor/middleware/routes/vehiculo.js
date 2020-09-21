@@ -46,7 +46,7 @@ router.post('/vehiculo/modo', function(req, res, next) {
     }).then(function (response) {
     
         let viajeData={
-            modo:body.req.modo
+            modo:req.body.modo
         };
         return axios({
             method: 'patch',
