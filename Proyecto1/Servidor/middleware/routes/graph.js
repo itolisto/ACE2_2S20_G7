@@ -178,26 +178,82 @@ router.get('/graph/obstaculo_encontrado', function(req, res, next) {
         .then(function (response) {
             const mapResponse = response.data.map(x => {
                 let obstaculosi= x.obstaculoentrega;
-                if(obstaculosi==null){
-                    obstaculosi=0;
+
+                if (obstaculosi == null) {
+                    obstaculosi = 0;
                 }
-                let obstaculosr =x.obstaculoregreso;
-                if(obstaculosr==null){
-                    obstaculosr=0;
+
+                let obstaculosr = x.obstaculoregreso;
+
+                if(obstaculosr == null) {
+                    obstaculosr = 0;
                 }
+
                 let hour = x.horasalida;
 
                 if (hour == null) {
-                    hour = "00:00";
+                    hour = "01";
                 } else {
-                    hour = moment(hour).format("hh:mm")
+                    hour = moment(hour).format("hh")
                 }
 
                 return {
                     horasalida: hour,
-                    total:obstaculosi+obstaculosr,
-                    obstaculosida:obstaculosi,
-                    obstaculosregreso:obstaculosr
+                    total: obstaculosi + obstaculosr,
+                    obstaculosida: obstaculosi,
+                    obstaculosregreso: obstaculosr
+                }
+            });
+
+            res.status(200).json(mapResponse);
+        })
+        .catch(function (error) {
+            next(error);
+        });
+});
+
+/**
+ * Ejemplo:
+ *
+ * [{"hora": "12", "ida": 0, "regreso": 0}, {"hora": "12", "ida": 15, "regreso": 100},...]
+ */
+router.get('/graph/obstaculo_encontrado_2', function(req, res, next) {
+    const selectFilter = {"fields": {"horasalida": true,"obstaculoentrega": true, "obstaculoregreso": true},
+        "where": {"and": [{"horasalida": {"gte": "2020-09-25T00:00:00.000Z"}}, {"horasalida": {"lt": "2020-09-25T23:59:59.999Z"}}]}};
+
+    const url = process.env.URL+ '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
+
+    axios({
+        method: 'get',
+        url: url,
+        headers: {'Accept': 'application/json'},
+    })
+        .then(function (response) {
+            const mapResponse = response.data.map(x => {
+                let obstaculosi= x.obstaculoentrega;
+
+                if (obstaculosi == null) {
+                    obstaculosi = 0;
+                }
+
+                let obstaculosr = x.obstaculoregreso;
+
+                if (obstaculosr == null) {
+                    obstaculosr = 0;
+                }
+
+                let hour = x.horasalida;
+
+                if (hour == null) {
+                    hour = "00";
+                } else {
+                    hour = moment(hour).format("hh")
+                }
+
+                return {
+                    hora: hour,
+                    ida: obstaculosi,
+                    regreso: obstaculosr
                 }
             });
 
