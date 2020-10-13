@@ -5,6 +5,7 @@ var liquido = require('./routes/liquido');
 var viaje = require('./routes/viaje');
 var vehiculo = require('./routes/vehiculo');
 var estadistica = require('./routes/estadistica');
+var graph = require('./routes/graph');
 var app = express();
 const requestIp = require('request-ip');
 const bodyParser = require('body-parser');
@@ -28,9 +29,10 @@ app.use(requestIp.mw());
 // routes <agregar o cambiar dependiendo de tu modelo>
 app.use('/', liquido);
 app.use('/', bitacora);
-app.use('/',viaje);
-app.use('/',vehiculo);
-app.use('/',estadistica);
+app.use('/', viaje);
+app.use('/', vehiculo);
+app.use('/', estadistica);
+app.use('/', graph);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
