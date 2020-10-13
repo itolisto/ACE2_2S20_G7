@@ -3,6 +3,11 @@ var router = express.Router();
 const axios = require('axios');
 var moment = require('moment');
 
+/**
+ * Ejemplo:
+ *
+ * [{"peso":60,"hora":"12:01"},{"peso":70,"hora":"12:03"},{"peso":0,"hora":"12:18"},...]
+ */
 router.get('/graph/peso_paquete', function(req, res, next) {
     const dia = req.params.dia;
 
@@ -44,6 +49,11 @@ router.get('/graph/peso_paquete', function(req, res, next) {
         });
 });
 
+/**
+ * Ejemplo:
+ *
+ * [{"peso":60,"hora":"12"},{"peso":70,"hora":"12"},{"peso":0,"hora":"12"},..]
+ */
 router.get('/graph/peso_paquete_2', function(req, res, next) {
     const dia = req.params.dia;
 
@@ -85,6 +95,11 @@ router.get('/graph/peso_paquete_2', function(req, res, next) {
         });
 });
 
+/**
+ * Ejemplo:
+ *
+ * {"15":1,"17":20,"19":22,"20":17,"25":8}
+ */
 router.get('/graph/paquete_entrega', function(req, res, next) {
     const dia = req.params.dia;
 
@@ -120,7 +135,7 @@ router.get('/graph/paquete_entrega', function(req, res, next) {
             };
 
             let finalResult = Object.fromEntries(
-                Object.entries(groupBy(mapResponse, 'hora')).map(([key, value]) => [key, value.length])
+                Object.entries(groupBy(mapResponse, 'hora')).map(([key, value]) => [moment(key).format("DD"), value.length])
             );
 
             res.status(200).json(finalResult);
@@ -138,6 +153,11 @@ router.get('/graph/tiempo_ida_vuelta', function(req, res, next) {
 
 });
 
+/**
+ * Ejemplo:
+ *
+ * [{"dia":"15","tiempoPromedioIda":13,"tiempoPromedioRegreso":27},{"dia":"17","tiempoPromedioIda":33,"tiempoPromedioRegreso":22},..]
+ */
 router.get('/graph/tiempo_promedio', function(req, res, next) {
     const mes = req.params.mes;
 
