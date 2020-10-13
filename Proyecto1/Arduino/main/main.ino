@@ -97,11 +97,11 @@ void loop() {
   }
 
   // 2. Verificar estado de respuesta actual del carro, si es falso omitir cualquier accion
-  if (activo == false) {
-    activo = true;
-    delay(10000);
-    return;
-  }
+  //  if (activo == false) {
+  //    activo = true;
+  //    delay(10000);
+  //    return;
+  //  }
 
   // 3. Verificar si hay algun obstaculo que impida el movimiento del carro
   float distanciaAObstaculo = distanciaObstaculo(orientacion);
@@ -110,6 +110,10 @@ void loop() {
     Serial.println("Obstaculo ida: " + String(distanciaAObstaculo, 2));
   } else {
     Serial.println("Obstaculo regreso: " + String(distanciaAObstaculo, 2));
+  }
+
+  if (distanciaAObstaculo < 0) {
+    distanciaAObstaculo = distanciaAObstaculo * -1;
   }
 
   if (distanciaAObstaculo < 7) {
@@ -125,7 +129,9 @@ void loop() {
       // Actualizar estado
       obstaculo_detectado = true;
       // Publicar nuevo estado
-      publicarEnConsola("#update#obstaculo#");
+      if (yaSeMovio) {
+        publicarEnConsola("#update#obstaculo#");
+      }
     }
     // Impedir cualquier movimiento por medio de retorno
     delay(1000);
@@ -305,8 +311,8 @@ bool desplazarse(int orientacion) {
     } else {
       digitalWrite(Motor11, LOW);
       digitalWrite(Motor12, LOW);
-      digitalWrite(Motor21, HIGH);
-      digitalWrite(Motor22, LOW);
+      digitalWrite(Motor21, LOW);
+      digitalWrite(Motor22, HIGH);
     }
   } else if (RIGHT_SENSOR > RIGHT_LIMIT && LEFT_SENSOR > LEFT_LIMIT) {
     // Detenerse
