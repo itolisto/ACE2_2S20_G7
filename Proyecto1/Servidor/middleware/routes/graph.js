@@ -149,7 +149,60 @@ router.get('/graph/obstaculo_encontrado', function(req, res, next) {
 
 });
 
+/**
+ * Ejemplo: 
+ * se debe enviar el dia
+ *hora de salida tiempo entrega en segundos y tiempo regreso en segudoss  
+ * [   { "horasalida": "12:03", "tiempoentrega": 27.865, "tiemporegreso": 28.509  },{ "horasalida": "12:18","tiempoentrega": 1551038.977,"tiemporegreso": 1550012.18
+    },]
+   
+ */
 router.get('/graph/tiempo_ida_vuelta', function(req, res, next) {
+   const mes = req.params.mes;
+
+    const selectFilter = {"fields": {"horasalida": true,"horaentrega":true, "horaregreso":true}, "where": {"and": [{"horasalida": {"gte": "2020-09-25T00:00:00.000Z"}}, {"horasalida": {"lt": "2020-09-25T23:59:59.999Z"}}]}};
+
+    const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
+
+    axios({
+        method: 'get',
+        url: url,
+        headers: {'Accept': 'application/json'},
+    })
+        .then(function (response) {
+            const mapResponse = response.data.map(x => {
+                let houre = x.horasalida;
+                if (houre== null) {
+                    houre = "00:00";
+                } else {
+                    houre = moment(houre).format("hh:mm")
+                }
+                let tempe = moment(x.horaentrega)-moment(x.horasalida);
+                let tempr=moment(x.horaregreso)-moment(x.horaentrega)
+                if(tempe<0){
+                    tempe =tempe*-1;
+                }
+                if(tempr<0){
+                    tempr =tempr*-1;
+                }
+                return {
+                    horasalida: houre,
+                    tiempoentrega:tempe/1000 ,
+                    tiemporegreso:tempr/1000
+                   
+                }
+           
+            });
+            
+
+            res.status(200).json(mapResponse);
+        })
+        .catch(function (error) {
+            console.log('error');
+            console.log(error);
+            next(error);
+        });
+
 
 });
 
