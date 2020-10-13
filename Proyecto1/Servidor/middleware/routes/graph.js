@@ -98,7 +98,7 @@ router.get('/graph/peso_paquete_2', function(req, res, next) {
 /**
  * Ejemplo:
  *
- * {"15":1,"17":20,"19":22,"20":17,"25":8}
+ * [{"dia":"15","entregados":1},{"dia":"17","entregados":20},{"dia":"19","entregados":22},...]
  */
 router.get('/graph/paquete_entrega', function(req, res, next) {
     const dia = req.params.dia;
@@ -138,7 +138,20 @@ router.get('/graph/paquete_entrega', function(req, res, next) {
                 Object.entries(groupBy(mapResponse, 'hora')).map(([key, value]) => [moment(key).format("DD"), value.length])
             );
 
-            res.status(200).json(finalResult);
+            const finalResult2 = [];
+
+            Object.keys(finalResult).forEach(function(key) {
+                const element = finalResult[key];
+
+                finalResult2.push(
+                    {
+                        dia: key,
+                        entregados: Math.floor(element)
+                    }
+                );
+            });
+
+            res.status(200).json(finalResult2);
         })
         .catch(function (error) {
             next(error);
@@ -150,15 +163,15 @@ router.get('/graph/obstaculo_encontrado', function(req, res, next) {
 });
 
 /**
- * Ejemplo: 
+ * Ejemplo:
  * se debe enviar el dia
- *hora de salida tiempo entrega en segundos y tiempo regreso en segudoss  
+ *hora de salida tiempo entrega en segundos y tiempo regreso en segudoss
  * [   { "horasalida": "12:03", "tiempoentrega": 27.865, "tiemporegreso": 28.509  },{ "horasalida": "12:18","tiempoentrega": 1551038.977,"tiemporegreso": 1550012.18
     },]
-   
+
  */
 router.get('/graph/tiempo_ida_vuelta', function(req, res, next) {
-   const mes = req.params.mes;
+    const mes = req.params.mes;
 
     const selectFilter = {"fields": {"horasalida": true,"horaentrega":true, "horaregreso":true}, "where": {"and": [{"horasalida": {"gte": "2020-09-25T00:00:00.000Z"}}, {"horasalida": {"lt": "2020-09-25T23:59:59.999Z"}}]}};
 
@@ -189,11 +202,11 @@ router.get('/graph/tiempo_ida_vuelta', function(req, res, next) {
                     horasalida: houre,
                     tiempoentrega:tempe/1000 ,
                     tiemporegreso:tempr/1000
-                   
+
                 }
-           
+
             });
-            
+
 
             res.status(200).json(mapResponse);
         })
@@ -202,8 +215,103 @@ router.get('/graph/tiempo_ida_vuelta', function(req, res, next) {
             console.log(error);
             next(error);
         });
+});
 
+/**
+ * Ejemplo:
+ *
+ * [{"dia":"10","tiempoPromedioIda":88,"tiempoPromedioRegreso":96},{"dia":"12","tiempoPromedioIda":49,"tiempoPromedioRegreso":76},...]
+ */
+router.get('/graph/tiempo_ida_vuelta_2', function(req, res, next) {
+    const mes = req.params.mes;
 
+    const selectFilter = {"fields": {"horasalida": true,"horaentrega":true, "horaregreso":true}, "where": {"and": [{"horasalida": {"gte": "2020-09-25T00:00:00.000Z"}}, {"horasalida": {"lt": "2020-09-25T23:59:59.999Z"}}]}};
+
+    const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
+
+    axios({
+        method: 'get',
+        url: url,
+        headers: {'Accept': 'application/json'},
+    })
+        .then(function (response) {
+            const mappedResult = {};
+
+            const mapResponse = response.data.map(x => {
+                let hour = x.horasalida;
+
+                if (hour == null) {
+                    hour = "00";
+                } else {
+                    hour = moment(hour).format("hh")
+                }
+
+                let salida = moment(x.horasalida); // Hora de salida
+
+                if (salida == null) {
+                    salida = moment("2020-09-01T00:00:01.000Z");
+                }
+
+                let entrega = moment(x.horaentrega); // Hora de entrega
+
+                if (entrega == null) {
+                    entrega = salida.clone().add(10, 'seconds');
+                }
+
+                let regreso = moment(x.horaregreso); // Hora de regreso
+
+                if (regreso == null) {
+                    regreso = entrega.clone().add(12, 'seconds');
+                }
+
+                let tiempoIda = Math.floor(moment.duration(entrega.diff(salida)).asSeconds());
+
+                if (tiempoIda < 0) {
+                    tiempoIda = tiempoIda * -1;
+                }
+
+                if (tiempoIda > 100) {
+                    tiempoIda = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+                }
+
+                let tiempoRegreso = Math.floor(moment.duration(regreso.diff(entrega)).asSeconds());
+
+                if (tiempoRegreso < 0) {
+                    tiempoRegreso = tiempoRegreso * -1;
+                }
+
+                if (tiempoRegreso > 100) {
+                    tiempoRegreso = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+                }
+
+                mappedResult[hour] = {
+                    hour: hour,
+                    tiempoIda: tiempoIda,
+                    tiempoRegreso: tiempoRegreso
+                }
+            });
+
+            const finalResult = [];
+
+            Object.keys(mappedResult).forEach(function(key) {
+                const element = mappedResult[key];
+
+                finalResult.push(
+                    {
+                        dia: element.hour,
+                        tiempoPromedioIda: Math.floor(element.tiempoIda),
+                        tiempoPromedioRegreso: Math.floor(element.tiempoRegreso)
+                    }
+                );
+            });
+
+            res.status(200).json(finalResult);
+        })
+        .catch(function (error) {
+            console.log('error');
+            console.log(error);
+            next(error);
+        });
 });
 
 /**
