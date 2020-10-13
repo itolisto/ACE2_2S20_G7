@@ -159,7 +159,7 @@ router.get('/graph/paquete_entrega', function(req, res, next) {
 });
 
 router.get('/graph/obstaculo_encontrado', function(req, res, next) {
-
+    res.status(200).json([]);
 });
 
 /**
@@ -299,8 +299,8 @@ router.get('/graph/tiempo_ida_vuelta_2', function(req, res, next) {
                 finalResult.push(
                     {
                         dia: element.hour,
-                        tiempoPromedioIda: Math.floor(element.tiempoIda),
-                        tiempoPromedioRegreso: Math.floor(element.tiempoRegreso)
+                        tiempoIda: Math.floor(element.tiempoIda),
+                        tiempoRegreso: Math.floor(element.tiempoRegreso)
                     }
                 );
             });
