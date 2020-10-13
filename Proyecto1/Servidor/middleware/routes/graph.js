@@ -145,17 +145,20 @@ router.get('/graph/paquete_entrega', function(req, res, next) {
         });
 });
 
+/**
+ *ejemplo 
+ * [ { "horasalida": "12:01",  "total": 0,  "obstaculosida": 0, "obstaculosregreso": 0  },  {  "horasalida": "12:03", "total": 115,  "obstaculosida": 15,  "obstaculosregreso": 100   }]
+ */
+
 router.get('/graph/obstaculo_encontrado', function(req, res, next) {
 
-    //obstaculoentrega
-    //obstaculoregreso
 
     const dia = req.params.dia;
 
     const selectFilter = {"fields": {"horasalida": true,"obstaculoentrega": true, "obstaculoregreso": true},
         "where": {"and": [{"horasalida": {"gte": "2020-09-25T00:00:00.000Z"}}, {"horasalida": {"lt": "2020-09-25T23:59:59.999Z"}}]}};
 
-    const url = process.env.URL + '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
+    const url = process.env.URL+ '/api/viajes?filter=' + encodeURIComponent(JSON.stringify(selectFilter));
 
     axios({
         method: 'get',
@@ -164,12 +167,14 @@ router.get('/graph/obstaculo_encontrado', function(req, res, next) {
     })
         .then(function (response) {
             const mapResponse = response.data.map(x => {
-                let weight = x.pesosalida;
-
-                if (weight == null) {
-                    weight = 0;
+                let obstaculosi= x.obstaculoentrega;
+                if(obstaculosi==null){
+                    obstaculosi=0;
                 }
-
+                let obstaculosr =x.obstaculoregreso;
+                if(obstaculosr==null){
+                    obstaculosr=0;
+                }
                 let hour = x.horasalida;
 
                 if (hour == null) {
@@ -179,8 +184,10 @@ router.get('/graph/obstaculo_encontrado', function(req, res, next) {
                 }
 
                 return {
-                    peso: weight,
-                    hora: hour
+                    horasalida: hour,
+                    total:obstaculosi+obstaculosr,
+                    obstaculosida:obstaculosi,
+                    obstaculosregreso:obstaculosr
                 }
             });
 
