@@ -30,7 +30,7 @@ module.exports = {
       instances: 1,
       env: {
         "NODE_ENV": "prod",
-        "URL": "http://167.99.237.132:3000"
+        "URL": "http://34.67.81.108:3000"
       }
     }
   ]
