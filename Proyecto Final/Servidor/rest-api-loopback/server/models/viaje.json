@@ -1,0 +1,60 @@
+{
+    "name": "viaje",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+          "horasalida": {
+            "type": "date",
+            "required": false
+          },
+          "pesosalida": {
+            "type": "number",
+            "required": true
+          },
+          "pesoentrega": {
+            "type": "number",
+            "required": false
+          },
+
+          "horaentrega": {
+            "type": "date",
+            "required": false
+          },
+          "obstaculoentrega": {
+            "type": "number",
+            "required": false
+          },
+          "horaregreso": {
+            "type": "date",
+            "required": false
+          },
+          "obstaculoregreso": {
+            "type": "number",
+            "required": false
+          },
+          "estadoviaje": {
+            "type": "string",
+            "required":false
+          
+          },
+          "modo": {
+            "type": "string",
+            "required":false
+          
+          },
+        "timestamp":{
+          "type": "date",
+          "defaultFn": "now",
+          "required": true
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+
+
+}

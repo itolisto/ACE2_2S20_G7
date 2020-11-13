@@ -1,0 +1,49 @@
+
+
+POST
+http://167.99.237.132:3000/api/liquidos
+
+Para liquidos solo recibe un dato tipo String
+
+{
+  "nivel": "alto"  //alto medio bajo  
+}
+
+POST
+http://167.99.237.132:3000/api/bitacoras
+BITACORA  los dos parametros que recibe son int
+{
+  "existe": 1, // 0 no existe , 1 existe
+  "peso": 100,//peso 
+}
+
+
+
+
+
+GET al hacer get el API devuelve lo siguiente
+
+
+http://167.99.237.132:3000/api/bitacoras
+
+{
+    "existe": 1, // 1 existe 0 no existe
+    "peso": 500,//peso numero 
+    "timestamp": "2020-08-20T19:30:15.344Z", //fecha de insercion 
+    "latitude": 0, //posicion donde se encuentra la caja
+    "longitude": 0, //posicion donde se encuentra la caja
+    "id": "5f3ecf470c509d3ae63576c4" //identificador
+  }
+
+
+
+
+http://167.99.237.132:3000/api/liquidos
+
+ {
+    "nivel": "alto", //alto  medio bajo 
+    "timestamp": "2020-08-20T19:34:50.308Z",//fecha de insercion
+    "latitude": 0, //posicion donde se encuentra la caja
+    "longitude": 0,//posicion donde se encuentra la caja
+    "id": "5f3ed05a0c509d3ae63576c5"//identificador
+  }

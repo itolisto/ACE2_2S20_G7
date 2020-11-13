@@ -1,0 +1,37 @@
+{
+    "name": "detalleviaje",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+  
+          "idviaje": {
+            "type": "string",
+            "required": true,
+            "default": 0
+          },
+          "estado": {
+            "type": "string",
+            "required": true,
+            "default": 0
+          },
+          "ubicacion": {
+            "type": "string",
+            "required": true,
+            "default": 0
+          }, 
+          "timestamp": {
+            "type": "date",
+            "required": true,
+            "defaultFn": "now"
+          }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+
+
+}
