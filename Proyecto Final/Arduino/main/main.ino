@@ -54,7 +54,7 @@ void loop() {
 
   float distanciaASujeto = medirDistanciaASujeto();
 
-  if (distanciaASujeto < 10) {
+  if (distanciaASujeto < 20) {
     lcd.clear();
     lcd.setCursor (0, 0);
     lcd.print("Midiendo temp.");
@@ -88,6 +88,8 @@ void loop() {
     // Mostrar temperatura
     lcd.setCursor (0, 1);
     lcd.print("Temp: " + String(promedioTemperatura, 2) + String("*C"));
+
+    publicarEnConsola("#send#" + String(promedioTemperatura, 2) + "#");
 
     // Mostrar pin de color
     digitalWrite(colorPin, HIGH);
@@ -132,4 +134,11 @@ float medirDistanciaASujeto() {
 
 float medirTemperatura() {
   return mlx.readObjectTempC();
+}
+
+void publicarEnConsola(String cadena) {
+  int str_len = cadena.length() + 1;
+  char CharString[str_len];
+  cadena.toCharArray(CharString, str_len);
+  Serial.write(CharString);
 }
