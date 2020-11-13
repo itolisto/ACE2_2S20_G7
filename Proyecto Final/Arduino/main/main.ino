@@ -74,13 +74,15 @@ void loop() {
     lcd.setCursor (0, 0);
 
     int colorPin = 0;
+    bool accessoPermitido = true;
 
-    if (promedioTemperatura < 37) {
+    if (promedioTemperatura <= 37.5) {
       lcd.print("Acceso concedido");
       colorPin = GREEN_PIN;
     } else {
       lcd.print("Acceso denegado");
       colorPin = RED_PIN;
+      accessoPermitido = false;
     }
 
     // Mostrar temperatura
@@ -94,12 +96,18 @@ void loop() {
 
     // Mover banda
     // TODO: Agregar implementacion
+    if (accessoPermitido) {
+      
+    } else {
+      
+    }
 
     // Reiniciar estado de espera
     isWaiting = false;
   } else {
     if (!isWaiting) {
       isWaiting = true;
+      lcd.clear();
       lcd.setCursor (0, 0);
       lcd.print("Esperando medir");
       lcd.setCursor (0, 1);
