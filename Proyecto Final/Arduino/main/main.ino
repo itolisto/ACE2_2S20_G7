@@ -114,8 +114,6 @@ void loop() {
     // Mover banda
     if (accessoPermitido) {
       desplazarse();
-    } else {
-
     }
 
     // Reiniciar estado de espera
