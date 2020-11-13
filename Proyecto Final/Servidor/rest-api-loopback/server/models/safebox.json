@@ -1,0 +1,33 @@
+{
+    "name": "safebox",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+          "horallegada": {
+            "type": "date",
+            "required": false
+          },
+          "temperatura": {
+            "type": "number",
+            "required": true
+          },
+          "acceso": {
+            "type": "number",
+            "required": false
+          },
+          "timestamp":{
+            "type": "date",
+            "defaultFn": "now",
+            "required": true
+          }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+
+
+}

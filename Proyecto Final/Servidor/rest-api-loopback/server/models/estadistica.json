@@ -1,0 +1,49 @@
+{
+    "name": "estadistica",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "idviaje": {
+            "type": "string",
+            "required": true,
+            "default": 0
+          },
+          "timestamp": {
+            "type": "date",
+            "required": true,
+            "defaultFn": "now"
+          },
+          "totalobstaculos": {
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          "paquetesencontrados": {
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          "pesopromedio": {
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          "tiempopromedioida": {
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          "tiempopromedioregreso": {
+            "type": "number",
+            "required": true,
+            "default": 0
+          }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}
