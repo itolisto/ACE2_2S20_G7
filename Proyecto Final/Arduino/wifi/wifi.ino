@@ -1,9 +1,14 @@
 #include <ArduinoJson.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+
+#include <WiFi.h>
+#include <HTTPClient.h>
 
 const char* ssid = "FamGoLeonGuest";
 const char* password = "GroovesRushDebris57";
+
+// Para correr programa en modulo ESP-32 agregar la siguiente URL para el manejador de boards
+// https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+// luego herramientas, seleccionar el Board "ESP32 Dev Module"
 
 void setup() {
   // Configurar data rate en baud (bits por segundo)
@@ -25,13 +30,12 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     if (Serial.available()) {
       String datos = Serial.readString();
+
+      // Variable de control que va concatenando cada valor entre # y # (ej. #valor# donde valor es lo que contiene val)
       String val = "";
-
+      // Variable que contiene la accion que se debe realizar
       String accion = "";
-      int expectedRead = 0;
-
-      float peso = 0.0;
-
+      // Variable de control que nos permite saber si ya se ha definido una accion
       bool accionDefinida = false;
 
       for (int i = 0; i < datos.length(); i++) {
@@ -50,33 +54,13 @@ void loop() {
             accion = val;
             accionDefinida = true;
           } else {
-            if (accion == "update") {
-              enviarUpdate(val);
-              // Salir de ciclo, ya no nos interesa nada mas
-              break;
-            } else if (accion == "salida") {
-              enviarSalida(stof(val));
-              // Salir de ciclo, ya no nos interesa nada mas
-              break;
-            } else if (accion == "entrega") {
-              switch (expectedRead) {
-                case 1: {
-                    peso = stof(val);
-                    break;
-                  }
-                default: {
-                    enviarEntrega(peso, val.toInt());
-                    break;
-                  }
-              }
-            } else if (accion == "regreso") {
-              enviarRegreso(val.toInt());
+            if (accion == "send") {
+              enviarTemperatura(stof(val));
             }
           }
 
           // Limpiar valor y comenzar de nuevo
           val = "";
-          expectedRead++;
         } else {
           // Concatenar valor
           val += datos[i];
@@ -88,10 +72,10 @@ void loop() {
   }
 }
 
-void enviarUpdate(String estado) {
+void enviarTemperatura(float temperatura) {
   // Declarar JSON buffer estático
   StaticJsonDocument<30> JSONbuffer;
-  JSONbuffer["estado"] = estado;
+  JSONbuffer["temperatura"] = temperatura;
   char JSONmessageBuffer[30];
   serializeJson(JSONbuffer, JSONmessageBuffer, 30);
   // Imprimir mensaje en consola para verificar
@@ -104,50 +88,10 @@ void enviarUpdate(String estado) {
   // Enviar petición POST
   int httpCode = http.POST(JSONmessageBuffer);
   // Obtener respuesta e imprimir información
-  // String payload = http.getString();
-  // Serial.println(httpCode);
-  // Serial.println(payload);
+  String payload = http.getString();
+  Serial.println(httpCode);
+  Serial.println(payload);
   // Cerrar conexión
-  http.end();
-}
-
-void enviarSalida(float peso) {
-  StaticJsonDocument<30> JSONbuffer;
-  JSONbuffer["peso"] = peso;
-  char JSONmessageBuffer[30];
-  serializeJson(JSONbuffer, JSONmessageBuffer, 30);
-  Serial.println(JSONmessageBuffer);
-  HTTPClient http;
-  http.begin("http://167.99.237.132:3600/envio/salida");
-  http.addHeader("Content-Type", "application/json");
-  int httpCode = http.POST(JSONmessageBuffer);
-  http.end();
-}
-
-void enviarRegreso(int obstaculos) {
-  StaticJsonDocument<25> JSONbuffer;
-  JSONbuffer["obstaculos"] = obstaculos;
-  char JSONmessageBuffer[25];
-  serializeJson(JSONbuffer, JSONmessageBuffer, 25);
-  Serial.println(JSONmessageBuffer);
-  HTTPClient http;
-  http.begin("http://167.99.237.132:3600/envio/regreso");
-  http.addHeader("Content-Type", "application/json");
-  int httpCode = http.POST(JSONmessageBuffer);
-  http.end();
-}
-
-void enviarEntrega(float peso, int obstaculos) {
-  StaticJsonDocument<65> JSONbuffer;
-  JSONbuffer["peso"] = peso;
-  JSONbuffer["obstaculos"] = obstaculos;
-  char JSONmessageBuffer[65];
-  serializeJson(JSONbuffer, JSONmessageBuffer, 65);
-  Serial.println(JSONmessageBuffer);
-  HTTPClient http;
-  http.begin("http://167.99.237.132:3600/envio/entrega");
-  http.addHeader("Content-Type", "application/json");
-  int httpCode = http.POST(JSONmessageBuffer);
   http.end();
 }
 
