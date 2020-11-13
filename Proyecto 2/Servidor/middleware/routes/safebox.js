@@ -25,4 +25,27 @@ router.post('/safebox/llegada',function(req,res,netxt){
     
 
 });
+
+router.post('/safebox/dashboard',function(req,res,netxt){
+    
+
+    let contador=0;
+
+    axios({
+        method: 'get',
+        url: process.env.URL + '/api/safeboxes/count',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    }).then(function(response){
+       contador = response.data['count'];
+        return axios({
+            method:'get',
+            url: process.env.URL + '/api/viajes/count',
+            headers: {'Accept': 'application/json'},
+        })
+    }).catch(function (error) {
+        next(error);
+    });
+    
+
+});
 module.exports = router;
