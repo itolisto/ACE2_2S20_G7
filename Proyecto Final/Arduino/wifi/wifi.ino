@@ -83,7 +83,7 @@ void enviarTemperatura(float temperatura) {
   // Declarar objeto de la clase HTTPClient
   HTTPClient http;
   // Indicar ruta de servidor
-  http.begin("http://167.99.237.132:3600/vehiculo/progreso");
+  http.begin("http://34.67.81.108:3600/safebox/llegada");
   http.addHeader("Content-Type", "application/json");
   // Enviar petición POST
   int httpCode = http.POST(JSONmessageBuffer);
