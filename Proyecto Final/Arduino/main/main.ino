@@ -3,7 +3,7 @@
 #include <Adafruit_MLX90614.h>
 
 // Iniciar librerias para pantalla y sensor de temperatura
-LiquidCrystal_I2C lcd(0x27,16,2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 
 // Pines de indicador de resultado
@@ -12,6 +12,11 @@ const int GREEN_PIN = 4;
 // Pines de sensor HC-SR04
 const int TRIG_PIN = 5;
 const int ECHO_PIN = 6;
+// Pines de motores
+const int Motor11 = 8;
+const int Motor12 = 9;
+const int Motor21 = 10;
+const int Motor22 = 11;
 
 // Variables de estado
 bool isFirstLaunch = true;
@@ -36,6 +41,11 @@ void setup() {
   lcd.backlight();
   // Configurar sensor de temperatura
   mlx.begin();
+  // Configurar pines de motor
+  pinMode(Motor11, OUTPUT);
+  pinMode(Motor12, OUTPUT);
+  pinMode(Motor21, OUTPUT);
+  pinMode(Motor22, OUTPUT);
 }
 
 void loop() {
@@ -44,6 +54,11 @@ void loop() {
     lcd.print("SafeBox");
     lcd.setCursor (0, 1);
     lcd.print("ARQ2 - Grupo #7");
+    // Forzar los motores a parar
+    digitalWrite(Motor11, LOW);
+    digitalWrite(Motor12, LOW);
+    digitalWrite(Motor21, LOW);
+    digitalWrite(Motor22, LOW);
     // Dejar mensaje por 7 seg
     delay(7000);
     // Limpiar variable y pantalla
@@ -62,7 +77,7 @@ void loop() {
     lcd.print("por favor espere");
     // Tomar varias mediciones y promediar
     float sumatoriaTemperatura = 0.0;
-    
+
     for (int i = 0; i < MEDICIONES; i++) {
       sumatoriaTemperatura = sumatoriaTemperatura + medirTemperatura();
       delay(300);
@@ -97,11 +112,10 @@ void loop() {
     digitalWrite(colorPin, LOW);
 
     // Mover banda
-    // TODO: Agregar implementacion
     if (accessoPermitido) {
-      
+      desplazarse();
     } else {
-      
+
     }
 
     // Reiniciar estado de espera
@@ -141,4 +155,12 @@ void publicarEnConsola(String cadena) {
   char CharString[str_len];
   cadena.toCharArray(CharString, str_len);
   Serial.write(CharString);
+}
+
+void desplazarse() {
+  digitalWrite(Motor11, HIGH);
+  digitalWrite(Motor12, LOW);
+  digitalWrite(Motor21, HIGH);
+  digitalWrite(Motor22, LOW);
+  delay(4000);
 }
