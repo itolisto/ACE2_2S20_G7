@@ -12,11 +12,8 @@ const int GREEN_PIN = 4;
 // Pines de sensor HC-SR04
 const int TRIG_PIN = 5;
 const int ECHO_PIN = 6;
-// Pines de motores
-const int Motor11 = 8;
-const int Motor12 = 9;
-const int Motor21 = 10;
-const int Motor22 = 11;
+// Pin de bomba
+const int PUM_PIN = 12;
 
 // Variables de estado
 bool isFirstLaunch = true;
@@ -41,11 +38,8 @@ void setup() {
   lcd.backlight();
   // Configurar sensor de temperatura
   mlx.begin();
-  // Configurar pines de motor
-  pinMode(Motor11, OUTPUT);
-  pinMode(Motor12, OUTPUT);
-  pinMode(Motor21, OUTPUT);
-  pinMode(Motor22, OUTPUT);
+  // Configurar pin de bomba de agua
+  pinMode(PUM_PIN, OUTPUT);
 }
 
 void loop() {
@@ -54,11 +48,6 @@ void loop() {
     lcd.print("SafeBox");
     lcd.setCursor (0, 1);
     lcd.print("ARQ2 - Grupo #7");
-    // Forzar los motores a parar
-    digitalWrite(Motor11, LOW);
-    digitalWrite(Motor12, LOW);
-    digitalWrite(Motor21, LOW);
-    digitalWrite(Motor22, LOW);
     // Dejar mensaje por 7 seg
     delay(7000);
     // Limpiar variable y pantalla
@@ -111,9 +100,11 @@ void loop() {
     delay(3000);
     digitalWrite(colorPin, LOW);
 
-    // Mover banda
+    // Dispensar agua
     if (accessoPermitido) {
-      desplazarse();
+      digitalWrite(PUM_PIN, HIGH);
+      delay(1000);
+      digitalWrite(PUM_PIN, LOW);
     }
 
     // Reiniciar estado de espera
@@ -153,12 +144,4 @@ void publicarEnConsola(String cadena) {
   char CharString[str_len];
   cadena.toCharArray(CharString, str_len);
   Serial.write(CharString);
-}
-
-void desplazarse() {
-  digitalWrite(Motor11, HIGH);
-  digitalWrite(Motor12, LOW);
-  digitalWrite(Motor21, HIGH);
-  digitalWrite(Motor22, LOW);
-  delay(4000);
 }
