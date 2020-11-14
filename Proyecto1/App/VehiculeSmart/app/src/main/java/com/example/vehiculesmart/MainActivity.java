@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.vehiculesmart.Interface.VehiculeApi;
+import com.example.vehiculesmart.Model.Global;
 import com.example.vehiculesmart.Model.VehiculeResponse;
 import com.example.vehiculesmart.Model.VehiculoModePost;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +25,7 @@ import static android.util.Log.println;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mJsonTxtView;
+    private TextView mJsonTxtView, mJsonTxtView2;
     private Button btnActivar, btnDesactivar, btnActualizar;
 
 
@@ -35,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mJsonTxtView = findViewById(R.id.jsonText);
-        getVehicule();
+        mJsonTxtView2 = findViewById(R.id.jsonText2);
+        //getVehicule();
+        getGlobal();
+        getDiario();
 
         btnActualizar = (Button) findViewById(R.id.buttonActualizar);
         btnActivar = (Button) findViewById(R.id.buttonActivar);
@@ -44,25 +48,27 @@ public class MainActivity extends AppCompatActivity {
         btnActualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getVehicule();
+                //getVehicule();
+                getGlobal();
             }
         });
 
         btnActivar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postMode("activo");
+                //postMode("activo");
+                getDiario();
             }
         });
 
         btnDesactivar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postMode("inactivo");
+                //postMode("inactivo");
             }
         });
 
-        suscribirUsuario();
+        //suscribirUsuario();
 
         //para que yo recupere la info y genere la push notification
 //        String accion = getIntent().getStringExtra("accion");
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+/*
     private void suscribirUsuario(){
         //suscribir este usuario a un tema FIREBASE
         FirebaseMessaging.getInstance().subscribeToTopic("grupoVehiculo")
@@ -158,6 +164,77 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+*/
+    private void getGlobal(){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://34.67.81.108:3600/")
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build();
+
+
+        VehiculeApi vehiculeApi = retrofit.create(VehiculeApi.class);
+        Call<Global>  call = vehiculeApi.getGlobal();
+
+        call.enqueue(new Callback<Global>() {
+            @Override
+            public void onResponse(Call<Global> call, Response<Global> response) {
+                if(!response.isSuccessful()){
+                    mJsonTxtView.setText("Codigo: "+response.code());
+                    return;
+                }
+
+                mJsonTxtView.setText("");
+
+                Global global = response.body();
+                mJsonTxtView.append("contador: " + global.getContador() + "\n");
+                mJsonTxtView.append("entradas: " + global.getEntradas() + "\n");
+                mJsonTxtView.append("denegados: " + global.getDenegados() + "\n");
+                mJsonTxtView.append("promedio: " + global.getPromedio() + "\n");
+            }
+
+            @Override
+            public void onFailure(Call<Global> call, Throwable t) {
+                mJsonTxtView.setText("Mensaje: "+t.getMessage());
+            }
+        });
+    }
+
+    private void getDiario(){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://34.67.81.108:3600/")
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build();
+
+
+        VehiculeApi vehiculeApi = retrofit.create(VehiculeApi.class);
+        Call<Global>  call = vehiculeApi.getDiario();
+
+        call.enqueue(new Callback<Global>() {
+            @Override
+            public void onResponse(Call<Global> call, Response<Global> response) {
+                if(!response.isSuccessful()){
+                    mJsonTxtView2.setText("Codigo: "+response.code());
+                    return;
+                }
+
+                mJsonTxtView2.setText("");
+
+                Global global = response.body();
+                mJsonTxtView2.append("contador: " + global.getContador() + "\n");
+                mJsonTxtView2.append("entradas: " + global.getEntradas() + "\n");
+                mJsonTxtView2.append("denegados: " + global.getDenegados() + "\n");
+                mJsonTxtView2.append("promedio: " + global.getPromedio() + "\n");
+            }
+
+            @Override
+            public void onFailure(Call<Global> call, Throwable t) {
+                mJsonTxtView2.setText("Mensaje: "+t.getMessage());
+            }
+        });
+    }
+
 
 
 }
